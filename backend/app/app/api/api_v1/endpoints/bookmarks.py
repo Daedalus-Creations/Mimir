@@ -20,15 +20,15 @@ def read_items(
     current_user: DBUser = Depends(get_current_active_user),
 ):
     """
-    Retrieve items.
+    Retrieve bookmarks.
     """
     if crud.user.is_superuser(current_user):
-        items = crud.item.get_multi(db, skip=skip, limit=limit)
+        bookmarks = crud.item.get_multi(db, skip=skip, limit=limit)
     else:
-        items = crud.item.get_multi_by_owner(
+        bookmarks = crud.item.get_multi_by_owner(
             db_session=db, owner_id=current_user.id, skip=skip, limit=limit
         )
-    return items
+    return bookmarks
 
 
 @router.post("/", response_model=Item)
