@@ -3,23 +3,23 @@ from pydantic import BaseModel
 from .user import User
 
 # Shared properties
-class ItemBase(BaseModel):
+class BookmarkBase(BaseModel):
     title: str = None
     description: str = None
 
 
-# Properties to receive on item creation
-class ItemCreate(ItemBase):
+# Properties to receive on bookmark creation
+class BookmarkCreate(BookmarkBase):
     title: str
 
 
-# Properties to receive on item update
-class ItemUpdate(ItemBase):
+# Properties to receive on bookmark update
+class BookmarkUpdate(BookmarkBase):
     pass
 
 
 # Properties shared by models stored in DB
-class ItemInDBBase(ItemBase):
+class BookmarkInDBBase(BookmarkBase):
     id: int
     title: str
     owner_id: int
@@ -29,10 +29,10 @@ class ItemInDBBase(ItemBase):
 
 
 # Properties to return to client
-class Item(ItemInDBBase):
+class Bookmark(BookmarkInDBBase):
     pass
 
 
 # Properties properties stored in DB
-class ItemInDB(ItemInDBBase):
+class BookmarkInDB(BookmarkInDBBase):
     pass

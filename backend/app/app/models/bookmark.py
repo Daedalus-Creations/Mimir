@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 
 
-class Item(Base):
+class Bookmark(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String, index=True)

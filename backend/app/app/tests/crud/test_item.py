@@ -1,65 +1,65 @@
 from app import crud
-from app.schemas.item import ItemCreate, ItemUpdate
+from app.schemas.bookmark import BookmarkCreate, BookmarkUpdate
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_lower_string
 from app.db.session import db_session
 
 
-def test_create_item():
+def test_create_bookmark():
     title = random_lower_string()
     description = random_lower_string()
-    item_in = ItemCreate(title=title, description=description)
+    bookmark_in = BookmarkCreate(title=title, description=description)
     user = create_random_user()
-    item = crud.item.create_with_owner(
-        db_session=db_session, obj_in=item_in, owner_id=user.id
+    bookmark = crud.bookmark.create_with_owner(
+        db_session=db_session, obj_in=bookmark_in, owner_id=user.id
     )
-    assert item.title == title
-    assert item.description == description
-    assert item.owner_id == user.id
+    assert bookmark.title == title
+    assert bookmark.description == description
+    assert bookmark.owner_id == user.id
 
 
-def test_get_item():
+def test_get_bookmark():
     title = random_lower_string()
     description = random_lower_string()
-    item_in = ItemCreate(title=title, description=description)
+    bookmark_in = BookmarkCreate(title=title, description=description)
     user = create_random_user()
-    item = crud.item.create_with_owner(
-        db_session=db_session, obj_in=item_in, owner_id=user.id
+    bookmark = crud.bookmark.create_with_owner(
+        db_session=db_session, obj_in=bookmark_in, owner_id=user.id
     )
-    stored_item = crud.item.get(db_session=db_session, id=item.id)
-    assert item.id == stored_item.id
-    assert item.title == stored_item.title
-    assert item.description == stored_item.description
-    assert item.owner_id == stored_item.owner_id
+    stored_bookmark = crud.bookmark.get(db_session=db_session, id=bookmark.id)
+    assert bookmark.id == stored_bookmark.id
+    assert bookmark.title == stored_bookmark.title
+    assert bookmark.description == stored_bookmark.description
+    assert bookmark.owner_id == stored_bookmark.owner_id
 
 
-def test_update_item():
+def test_update_bookmark():
     title = random_lower_string()
     description = random_lower_string()
-    item_in = ItemCreate(title=title, description=description)
+    bookmark_in = BookmarkCreate(title=title, description=description)
     user = create_random_user()
-    item = crud.item.create_with_owner(
-        db_session=db_session, obj_in=item_in, owner_id=user.id
+    bookmark = crud.bookmark.create_with_owner(
+        db_session=db_session, obj_in=bookmark_in, owner_id=user.id
     )
     description2 = random_lower_string()
-    item_update = ItemUpdate(description=description2)
-    item2 = crud.item.update(db_session=db_session, db_obj=item, obj_in=item_update)
-    assert item.id == item2.id
-    assert item.title == item2.title
-    assert item2.description == description2
-    assert item.owner_id == item2.owner_id
+    bookmark_update = BookmarkUpdate(description=description2)
+    bookmark2 = crud.bookmark.update(db_session=db_session, db_obj=bookmark, obj_in=bookmark_update)
+    assert bookmark.id == bookmark2.id
+    assert bookmark.title == bookmark2.title
+    assert bookmark2.description == description2
+    assert bookmark.owner_id == bookmark2.owner_id
 
 
-def test_delete_item():
+def test_delete_bookmark():
     title = random_lower_string()
     description = random_lower_string()
-    item_in = ItemCreate(title=title, description=description)
+    bookmark_in = BookmarkCreate(title=title, description=description)
     user = create_random_user()
-    item = crud.item.create_with_owner(db_session=db_session, obj_in=item_in, owner_id=user.id)
-    item2 = crud.item.remove(db_session=db_session, id=item.id)
-    item3 = crud.item.get(db_session=db_session, id=item.id)
-    assert item3 is None
-    assert item2.id == item.id
-    assert item2.title == title
-    assert item2.description == description
-    assert item2.owner_id == user.id
+    bookmark = crud.bookmark.create_with_owner(db_session=db_session, obj_in=bookmark_in, owner_id=user.id)
+    bookmark2 = crud.bookmark.remove(db_session=db_session, id=bookmark.id)
+    bookmark3 = crud.bookmark.get(db_session=db_session, id=bookmark.id)
+    assert bookmark3 is None
+    assert bookmark2.id == bookmark.id
+    assert bookmark2.title == title
+    assert bookmark2.description == description
+    assert bookmark2.owner_id == user.id

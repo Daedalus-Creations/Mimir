@@ -7,13 +7,13 @@ from app import crud
 from app.api.utils.db import get_db
 from app.api.utils.security import get_current_active_user
 from app.models.user import User as DBUser
-from app.schemas.item import Item, ItemCreate, ItemUpdate
+from app.schemas.bookmark import Bookmark, BookmarkCreate, BookmarkUpdate
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Item])
-def read_items(
+@router.get("/", response_model=List[Bookmark])
+def read_bookmarks(
     db: Session = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
@@ -23,82 +23,82 @@ def read_items(
     Retrieve bookmarks.
     """
     if crud.user.is_superuser(current_user):
-        bookmarks = crud.item.get_multi(db, skip=skip, limit=limit)
+        bookmarks = crud.bookmark.get_multi(db, skip=skip, limit=limit)
     else:
-        bookmarks = crud.item.get_multi_by_owner(
+        bookmarks = crud.bookmark.get_multi_by_owner(
             db_session=db, owner_id=current_user.id, skip=skip, limit=limit
         )
     return bookmarks
 
 
-@router.post("/", response_model=Item)
-def create_item(
+@router.post("/", response_model=Bookmark)
+def create_bookmark(
     *,
     db: Session = Depends(get_db),
-    item_in: ItemCreate,
+    bookmark_in: BookmarkCreate,
     current_user: DBUser = Depends(get_current_active_user),
 ):
     """
-    Create new item.
+    Create new bookmark.
     """
-    item = crud.item.create_with_owner(
-        db_session=db, obj_in=item_in, owner_id=current_user.id
+    bookmark = crud.bookmark.create_with_owner(
+        db_session=db, obj_in=bookmark_in, owner_id=current_user.id
     )
-    return item
+    return bookmark
 
 
-@router.put("/{id}", response_model=Item)
-def update_item(
+@router.put("/{id}", response_model=Bookmark)
+def update_bookmark(
     *,
     db: Session = Depends(get_db),
     id: int,
-    item_in: ItemUpdate,
+    bookmark_in: BookmarkUpdate,
     current_user: DBUser = Depends(get_current_active_user),
 ):
     """
-    Update an item.
+    Update an bookmark.
     """
-    item = crud.item.get(db_session=db, id=id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
+    bookmark = crud.bookmark.get(db_session=db, id=id)
+    if not bookmark:
+        raise HTTPException(status_code=404, detail="Bookmark not found")
+    if not crud.user.is_superuser(current_user) and (bookmark.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = crud.item.update(db_session=db, db_obj=item, obj_in=item_in)
-    return item
+    bookmark = crud.bookmark.update(db_session=db, db_obj=bookmark, obj_in=bookmark_in)
+    return bookmark
 
 
-@router.get("/{id}", response_model=Item)
-def read_item(
-    *,
-    db: Session = Depends(get_db),
-    id: int,
-    current_user: DBUser = Depends(get_current_active_user),
-):
-    """
-    Get item by ID.
-    """
-    item = crud.item.get(db_session=db, id=id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
-    return item
-
-
-@router.delete("/{id}", response_model=Item)
-def delete_item(
+@router.get("/{id}", response_model=Bookmark)
+def read_bookmark(
     *,
     db: Session = Depends(get_db),
     id: int,
     current_user: DBUser = Depends(get_current_active_user),
 ):
     """
-    Delete an item.
+    Get bookmark by ID.
     """
-    item = crud.item.get(db_session=db, id=id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
+    bookmark = crud.bookmark.get(db_session=db, id=id)
+    if not bookmark:
+        raise HTTPException(status_code=404, detail="Bookmark not found")
+    if not crud.user.is_superuser(current_user) and (bookmark.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = crud.item.remove(db_session=db, id=id)
-    return item
+    return bookmark
+
+
+@router.delete("/{id}", response_model=Bookmark)
+def delete_bookmark(
+    *,
+    db: Session = Depends(get_db),
+    id: int,
+    current_user: DBUser = Depends(get_current_active_user),
+):
+    """
+    Delete an bookmark.
+    """
+    bookmark = crud.bookmark.get(db_session=db, id=id)
+    if not bookmark:
+        raise HTTPException(status_code=404, detail="Bookmark not found")
+    if not crud.user.is_superuser(current_user) and (bookmark.owner_id != current_user.id):
+        raise HTTPException(status_code=400, detail="Not enough permissions")
+    bookmark = crud.bookmark.remove(db_session=db, id=id)
+    return bookmark

@@ -11,4 +11,4 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
-    bookmarks = relationship("Item", back_populates="owner")
+    bookmarks = relationship("Bookmark", back_populates="owner")
