@@ -1,0 +1,38 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Mimir" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="secondarySourceFiles">
+          <list>
+            <option value="../../docker-compose.dev.volumes.yml" />
+            <option value="../../docker-compose.dev.command.yml" />
+            <option value="../../docker-compose.dev.ports.yml" />
+            <option value="../../docker-compose.dev.build.yml" />
+            <option value="../../docker-compose.shared.env.yml" />
+            <option value="../../docker-compose.shared.depends.yml" />
+            <option value="../../docker-compose.dev.env.yml" />
+            <option value="../../docker-compose.dev.networks.yml" />
+            <option value="../../docker-compose.test.yml" />
+            <option value="../../docker-compose.shared.base-images.yml" />
+            <option value="../../docker-compose.dev.labels.yml" />
+          </list>
+        </option>
+        <option name="services">
+          <list>
+            <option value="backend" />
+            <option value="backend-tests" />
+            <option value="celeryworker" />
+            <option value="db" />
+            <option value="flower" />
+            <option value="frontend" />
+            <option value="pgadmin" />
+            <option value="proxy" />
+            <option value="queue" />
+          </list>
+        </option>
+        <option name="sourceFilePath" value="../../docker-compose.shared.admin.yml" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
