@@ -9,7 +9,7 @@ def getenv_boolean(var_name, default_value=False):
     return result
 
 
-API_V1_STR = "/api/v1"
+API_V1_STR = "/api"
 
 SECRET_KEY = os.getenvb(b"SECRET_KEY")
 if not SECRET_KEY:
