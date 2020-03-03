@@ -1,10 +1,10 @@
 from .crud_user import user
-from .crud_bookmark import bookmark
+from .crud_quote import quote
 
 # For a new basic set of CRUD operations you could just do
 
 # from .base import CRUDBase
-# from app.models.bookmark import Bookmark
-# from app.schemas.bookmark import BookmarkCreate, BookmarkUpdate
+# from app.models.quote import Quote
+# from app.schemas.quote import QuoteCreate, QuoteUpdate
 
-# bookmark = CRUDBase[Bookmark, BookmarkCreate, BookmarkUpdate](Bookmark)
+# quote = CRUDBase[Quote, QuoteCreate, QuoteUpdate](Quote)
