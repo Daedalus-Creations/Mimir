@@ -2,45 +2,48 @@ from typing import List
 
 from pydantic import BaseModel
 
-from .tag import Tag
 from .user import User
 from pydantic.color import Color
 
 
 # Shared properties
-class QuoteBase(BaseModel):
+class TagBase(BaseModel):
     title: str = None
-    description: str = None
     public: bool = None
     color: Color = None
-    tags: List[Tag] = []
 
 
-# Properties to receive on quote creation
-class QuoteCreate(QuoteBase):
+# Properties to receive on tag creation
+class TagCreate(TagBase):
     title: str
     public: bool = False
+    color: Color = "00ffff"
+    # color: Color = pickColor() TODO: Randomly assign color
 
-# Properties to receive on quote update
-class QuoteUpdate(QuoteBase):
+
+# Properties to receive on tag update
+class TagUpdate(TagBase):
     pass
 
 
 # Properties shared by models stored in DB
-class QuoteInDBBase(QuoteBase):
+class TagInDBBase(TagBase):
     id: int
     title: str
     owner_id: int
+    public: bool
+    color: Color
+
 
     class Config:
         orm_mode = True
 
 
 # Properties to return to client
-class Quote(QuoteInDBBase):
+class Tag(TagInDBBase):
     pass
 
 
 # Properties properties stored in DB
-class QuoteInDB(QuoteInDBBase):
+class TagInDB(TagInDBBase):
     pass

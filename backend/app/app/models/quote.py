@@ -10,7 +10,8 @@ class Quote(Base):
     description = Column(String, index=True)
     public = Column(Boolean, nullable=False)
     owner_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    color = Column(LargeBinary)
+    color = Column(String)
 
     owner = relationship("User", back_populates="quotes")
-    tags_for_quote = relationship("Quote_Tag", back_populates="tag_owner")
+    # tags = relationship("Quote_Tag", back_populates="tag_owner")
+    tags = relationship("Tag", secondary="quote_tag", back_populates="quotes")

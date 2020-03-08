@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 def init():
     init_db(db_session)
 
-
 def main():
     logger.info("Creating initial data")
     init()
