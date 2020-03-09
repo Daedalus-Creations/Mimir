@@ -49,7 +49,6 @@ def test_get_quote_by_tag_owner():
         db_session=db_session, obj_in=tag_in, owner_id=user.id
     )
 
-
     quote_in.tags.append(Tag(**jsonable_encoder(tag)))
 
     tag_2 = crud.tag.create_with_owner(
