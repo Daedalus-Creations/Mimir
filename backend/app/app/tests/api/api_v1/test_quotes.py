@@ -8,7 +8,7 @@ from app.tests.utils.user import create_random_user
 
 def test_create_quote(superuser_token_headers):
     server_api = get_server_api()
-    data = {"title": "Foo", "description": "Fighters", "public": "true"}
+    data = {"title": "Foo", "text": "Chicken", "description": "Fighters", "public": "true"}
     response = requests.post(
         f"{server_api}{config.API_V1_STR}/quotes/",
         headers=superuser_token_headers,
