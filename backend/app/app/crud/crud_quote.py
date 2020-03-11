@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.models.quote import Quote
-from app.schemas.quote import QuoteCreate, QuoteUpdate
+from app.schemas.quote import QuoteCreate, QuoteUpdate, QuoteSearch
 from app.crud.base import CRUDBase
 from app.models.tag import Tag
 from app.crud.crud_tag import tag as crud_tag
@@ -20,11 +20,14 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
     ) -> Quote:
         tags = [crud_tag.get(db_session, tag.id) for tag in obj_in.tags]
         logger.info(tags)
+        color = obj_in.color.as_hex() if obj_in.color else None
         db_obj = self.model(title=obj_in.title,
+                            text=obj_in.text,
+                            type=obj_in.type,
                             description=obj_in.description,
                             public=obj_in.public,
                             owner_id=owner_id,
-                            color=jsonable_encoder(obj_in.color),
+                            color=color,
                             tags=tags)
         db_session.add(db_obj)
         db_session.commit()
@@ -65,6 +68,40 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
         #         .limit(limit)
         #         .all()
         # )
+    def get_multi_by_search_owner(
+            self, db_session: Session, *, owner_id: int, search: QuoteSearch, skip=0, limit=100
+    ):
+        anywhere = search.any
+        title = search.title
+        text = search.text
+        type_search = search.type
+        description = search.description
+        # public = search.public
+        color = search.color
+        tags = search.tags
+
+        quotes = db_session.query(self.model).filter(Quote.owner_id == owner_id)
+
+        if title:
+            quotes = quotes.filter(Quote.title.ilike(title))
+        if text:
+            quotes = quotes.filter(Quote.text.ilike(text))
+        if type_search:
+            quotes = quotes.filter(Quote.type.ilike(type_search))
+        if description:
+            quotes = quotes.filter(Quote.description.ilike(description))
+        if color:
+            quotes = quotes.filter(Quote.color == color)
+
+        if anywhere:
+            quotes = quotes.filter(
+                or_(Quote.title.ilike(anywhere),
+                    Quote.text.ilike(anywhere),
+                    Quote.description.ilike(anywhere))
+            )
+            # quotes = quotes.
+        quotes = quotes.all()
+        return quotes
 
 
 quote = CRUDQuote(Quote)

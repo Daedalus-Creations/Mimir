@@ -1,13 +1,15 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic.color import Color
 from sqlalchemy.orm import Session
 
 from app import crud
 from app.api.utils.db import get_db
 from app.api.utils.security import get_current_active_user
 from app.models.user import User as DBUser
-from app.schemas.quote import Quote, QuoteCreate, QuoteUpdate
+from app.schemas.quote import Quote, QuoteCreate, QuoteUpdate, QuoteSearch
+from app.schemas.tag import Tag
 
 router = APIRouter()
 
@@ -17,6 +19,13 @@ def read_quotes(
     db: Session = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
+    anywhere: str = None,
+    title: str = None,
+    text: str = None,
+    type_search: str = None,
+    description: str = None,
+    color: Color = None,
+    tag_ids: List[int] = None,
     current_user: DBUser = Depends(get_current_active_user),
 ):
     """
@@ -25,9 +34,14 @@ def read_quotes(
     if crud.user.is_superuser(current_user):
         quotes = crud.quote.get_multi(db, skip=skip, limit=limit)
     else:
-        quotes = crud.quote.get_multi_by_owner(
-            db_session=db, owner_id=current_user.id, skip=skip, limit=limit
-        )
+        if anywhere:
+            quotes = crud.quote.get_multi_by_owner(
+                db_session=db, owner_id=current_user.id, skip=skip, limit=limit
+            )
+        else:
+            quotes = crud.quote.get_multi_from_search(
+                db_session=db, owner_id=current_user.id, skip=skip, limit=limit
+            )
     return quotes
 
 

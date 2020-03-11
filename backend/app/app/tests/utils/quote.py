@@ -11,7 +11,8 @@ def create_random_quote(owner_id: int = None):
         owner_id = user.id
     title = random_lower_string()
     description = random_lower_string()
-    quote_in = QuoteCreate(title=title, description=description, id=id)
+    text = random_lower_string()
+    quote_in = QuoteCreate(title=title, description=description, text=text, id=id)
     return crud.quote.create_with_owner(
         db_session=db_session, obj_in=quote_in, owner_id=owner_id
     )
