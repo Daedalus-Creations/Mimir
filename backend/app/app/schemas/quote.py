@@ -2,6 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
+from .quote_type import QuoteType
 from .tag import Tag
 from .user import User
 from pydantic.color import Color
@@ -11,7 +12,7 @@ from pydantic.color import Color
 class QuoteBase(BaseModel):
     title: str = None
     text: str = None
-    type: str = None
+    type: QuoteType = None
     description: str = None
     public: bool = None
     color: Color = None
@@ -21,7 +22,7 @@ class QuoteBase(BaseModel):
 # Properties to receive on quote creation
 class QuoteCreate(QuoteBase):
     text: str
-    type: str = "Uncategorized"
+    type: QuoteType = QuoteType.uncategorized
     public: bool = False
 
 # Properties to receive on quote update
@@ -33,7 +34,7 @@ class QuoteSearch(BaseModel):
     anywhere: str = None
     title: str = None
     text: str = None
-    type_search: str = None
+    quote_type: QuoteType = None
     description: str = None
     public: bool = None
     color: Color = None
@@ -43,7 +44,7 @@ class QuoteSearch(BaseModel):
 class QuoteInDBBase(QuoteBase):
     id: int
     text: str
-    type: str
+    type: QuoteType
     owner_id: int
 
     class Config:

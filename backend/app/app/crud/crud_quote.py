@@ -29,7 +29,7 @@ def search_query(quotes: Query, search: QuoteSearch, skip=0, limit=100):
     anywhere = search.anywhere
     title = search.title
     text = search.text
-    type_search = search.type_search
+    quote_type = search.quote_type
     description = search.description
     # public = search.public
     color = search.color
@@ -39,8 +39,8 @@ def search_query(quotes: Query, search: QuoteSearch, skip=0, limit=100):
         quotes = quotes.filter(Quote.title.ilike(title))
     if text:
         quotes = quotes.filter(Quote.text.ilike(text))
-    if type_search:
-        quotes = quotes.filter(Quote.type == type_search)
+    if quote_type:
+        quotes = quotes.filter(Quote.type == quote_type)
     if description:
         quotes = quotes.filter(Quote.description.ilike(description))
     if color:

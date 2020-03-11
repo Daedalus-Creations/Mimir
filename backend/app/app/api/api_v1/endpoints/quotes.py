@@ -22,7 +22,7 @@ def read_quotes(
     anywhere: str = None,
     title: str = None,
     text: str = None,
-    type_search: str = None,
+    quote_type: str = None,
     description: str = None,
     color: Color = None,
     tag_ids: List[int] = None,
@@ -44,7 +44,7 @@ def read_quotes(
         anywhere=anywhere,
         title=title,
         text=text,
-        type_search=type_search,
+        quote_type=quote_type,
         description=description,
         color=color.as_hex() if color else None,
         tags=tags
