@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
 from app.models.quote import Quote
 from app.schemas.quote import QuoteCreate, QuoteUpdate, QuoteSearch
@@ -13,6 +13,52 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def get_multi_by_tag(quotes: List[Quote], tags: List[Tag]):
+    matching_quotes: List[Quote] = []
+    for quote in quotes:
+        if not set(quote.tags).isdisjoint(
+                tags):  # https://stackoverflow.com/questions/3170055/test-if-lists-share-any-items-in-python
+            logger.info("TRUE")
+            logger.info(quote)
+            matching_quotes.append(quote)
+    return matching_quotes
+
+def search_query(quotes: Query, search: QuoteSearch, skip=0, limit=100):
+    anywhere = search.anywhere
+    title = search.title
+    text = search.text
+    type_search = search.type_search
+    description = search.description
+    # public = search.public
+    color = search.color
+    tags = search.tags
+
+    if title:
+        quotes = quotes.filter(Quote.title.ilike(title))
+    if text:
+        quotes = quotes.filter(Quote.text.ilike(text))
+    if type_search:
+        quotes = quotes.filter(Quote.type == type_search)
+    if description:
+        quotes = quotes.filter(Quote.description.ilike(description))
+    if color:
+        quotes = quotes.filter(Quote.color == color.as_hex())
+
+    if anywhere:
+        logger.info("ANYWHERE called")
+        quotes = quotes.filter(
+            or_(Quote.title.ilike(anywhere),
+                Quote.text.ilike(anywhere),
+                Quote.description.ilike(anywhere))
+        )
+    quotes = quotes.offset(skip).limit(limit).all()
+
+    if tags:
+        return get_multi_by_tag(quotes, tags)
+    else:
+        return quotes
 
 class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
     def create_with_owner(
@@ -49,13 +95,7 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
             self, db_session: Session, *, owner_id: int, tags: List[Tag], skip=0, limit=100
     ) -> List[Quote]:
         quotes = db_session.query(self.model).filter(Quote.owner_id == owner_id).all()
-        matching_quotes: List[Quote] = []
-        for quote in quotes:
-            if not set(quote.tags).isdisjoint(tags): #https://stackoverflow.com/questions/3170055/test-if-lists-share-any-items-in-python
-                logger.info("TRUE")
-                logger.info(quote)
-                matching_quotes.append(quote)
-        return matching_quotes
+        return get_multi_by_tag(quotes, tags)
         # return (
         #     db_session.query(self.model)
         #         .filter(Quote.owner_id == owner_id)
@@ -71,37 +111,19 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
     def get_multi_by_search_owner(
             self, db_session: Session, *, owner_id: int, search: QuoteSearch, skip=0, limit=100
     ):
-        anywhere = search.any
-        title = search.title
-        text = search.text
-        type_search = search.type
-        description = search.description
-        # public = search.public
-        color = search.color
-        tags = search.tags
 
         quotes = db_session.query(self.model).filter(Quote.owner_id == owner_id)
 
-        if title:
-            quotes = quotes.filter(Quote.title.ilike(title))
-        if text:
-            quotes = quotes.filter(Quote.text.ilike(text))
-        if type_search:
-            quotes = quotes.filter(Quote.type.ilike(type_search))
-        if description:
-            quotes = quotes.filter(Quote.description.ilike(description))
-        if color:
-            quotes = quotes.filter(Quote.color == color)
+        return search_query(quotes, search, skip, limit)
 
-        if anywhere:
-            quotes = quotes.filter(
-                or_(Quote.title.ilike(anywhere),
-                    Quote.text.ilike(anywhere),
-                    Quote.description.ilike(anywhere))
-            )
-            # quotes = quotes.
-        quotes = quotes.all()
-        return quotes
+    def get_multi_by_search(
+            self, db_session: Session, *, search: QuoteSearch, skip=0, limit=100
+    ):
+        logger.info("GET MULTI BY SEARCH")
+        quotes = db_session.query(self.model)
+
+
+        return search_query(quotes, search, skip, limit)
 
 
 quote = CRUDQuote(Quote)

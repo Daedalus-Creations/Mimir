@@ -30,10 +30,10 @@ class QuoteUpdate(QuoteBase):
 
 # Properties to search for in quotes
 class QuoteSearch(BaseModel):
-    any: str = None
+    anywhere: str = None
     title: str = None
     text: str = None
-    type: str = None
+    type_search: str = None
     description: str = None
     public: bool = None
     color: Color = None

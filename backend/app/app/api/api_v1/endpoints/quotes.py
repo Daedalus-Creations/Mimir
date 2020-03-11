@@ -31,17 +31,35 @@ def read_quotes(
     """
     Retrieve quotes.
     """
+
+    tags = []
+    if tag_ids:
+        for each_tag in tag_ids:
+            tag = crud.tag.get(db_session=db, id=each_tag)
+            if not tag:
+                raise HTTPException(status_code=404, detail="Tag not found")
+            tags.append(tag)
+
+    search: QuoteSearch = QuoteSearch(
+        anywhere=anywhere,
+        title=title,
+        text=text,
+        type_search=type_search,
+        description=description,
+        color=color.as_hex() if color else None,
+        tags=tags
+    )
+
     if crud.user.is_superuser(current_user):
-        quotes = crud.quote.get_multi(db, skip=skip, limit=limit)
+        quotes = crud.quote.get_multi_by_search(
+            db, search=search, skip=skip, limit=limit
+        )
     else:
-        if anywhere:
-            quotes = crud.quote.get_multi_by_owner(
-                db_session=db, owner_id=current_user.id, skip=skip, limit=limit
-            )
-        else:
-            quotes = crud.quote.get_multi_from_search(
-                db_session=db, owner_id=current_user.id, skip=skip, limit=limit
-            )
+        quotes = crud.quote.get_multi_by_search_owner(
+            db_session=db, owner_id=current_user.id, search=search, skip=skip, limit=limit
+        )
+
+
     return quotes
 
 
