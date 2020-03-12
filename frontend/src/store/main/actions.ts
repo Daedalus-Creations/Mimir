@@ -12,6 +12,7 @@ import {
     commitSetLogInError,
     commitSetToken,
     commitSetUserProfile,
+    commitSetQuotes,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -152,6 +153,16 @@ export const actions = {
         } catch (error) {
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
+        }
+    },
+    async loadQuotes(context: MainContext){
+        try{
+            const response = await api.getQuotes(context.state.token);
+            if (response.data) {
+                commitSetQuotes(context, response.data);
+            }
+        } catch (error) {
+            //error handling
         }
     },
 };
