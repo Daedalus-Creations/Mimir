@@ -10,6 +10,7 @@ from pydantic.color import Color
 class QuoteType(str, Enum):
     book = "Book"
     film = "Film"
+    lyrics = "Lyrics"
     poem = "Poem"
     speech = "Speech"
     web = "Web"
