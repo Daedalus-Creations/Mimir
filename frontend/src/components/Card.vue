@@ -6,11 +6,16 @@
     import { Component, Prop, Vue } from 'vue-property-decorator'
     import {readQuotes} from '@/store/main/getters.ts'
     import {commitSetQuote} from "@/store/main/mutations";
-    import {IQuote} from "@/interfaces";
+    import {IQuote, type} from "@/interfaces";
 
 
-    @Component
-    export default class Cards extends Vue {
+    @Component({
+        components: {}
+    })
+    export default class Card extends Vue {
+        public isOpen=true;
+        public editable=false;
+        public isLoading=false;
         @Prop({required:true}) id!: number;
 
         get quote() {
@@ -24,9 +29,12 @@
             }
         }
 
-        updateQuote() {
+        /*async updateQuote() {
+            this.isLoading =true;
+            await dispatchUpdateQuote(this.$store);
+            this.isLoading=false;
 
-        }
+        }*/
     }
 </script>
 

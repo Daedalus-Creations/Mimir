@@ -32,12 +32,12 @@ export default new Router({
           path: 'main',
           component: () => import(/* webpackChunkName: "main" */ './views/main/Main.vue'),
           children: [
+            //{
+              //path: 'dashboard',
+              //component: () => import(/* webpackChunkName: "main-dashboard" */ './views/main/Dashboard.vue'),
+            //},
             {
               path: 'dashboard',
-              component: () => import(/* webpackChunkName: "main-dashboard" */ './views/main/Dashboard.vue'),
-            },
-            {
-              path: 'cards',
               component: () => import('./views/main/Cards.vue'),
             },
             {

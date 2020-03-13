@@ -1,4 +1,4 @@
-import { IUserProfile, IQuote } from '@/interfaces';
+import {IUserProfile, IQuote, IQuoteCreate} from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
