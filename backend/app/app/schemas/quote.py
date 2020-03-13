@@ -10,6 +10,7 @@ from pydantic.color import Color
 
 # Shared properties
 class QuoteBase(BaseModel):
+    author: str = None
     title: str = None
     text: str = None
     type: QuoteType = None
@@ -32,6 +33,7 @@ class QuoteUpdate(QuoteBase):
 # Properties to search for in quotes
 class QuoteSearch(BaseModel):
     anywhere: str = None
+    author: str = None
     title: str = None
     text: str = None
     quote_type: QuoteType = None

@@ -21,6 +21,7 @@ def read_quotes(
     limit: int = 100,
     anywhere: str = None,
     title: str = None,
+    author: str = None,
     text: str = None,
     quote_type: str = None,
     description: str = None,
@@ -43,6 +44,7 @@ def read_quotes(
     search: QuoteSearch = QuoteSearch(
         anywhere=anywhere,
         title=title,
+        author=author,
         text=text,
         quote_type=quote_type,
         description=description,
