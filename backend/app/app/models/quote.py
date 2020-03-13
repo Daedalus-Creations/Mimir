@@ -7,6 +7,7 @@ from app.models import user, quote_tag
 class Quote(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
+    author = Column(String, index=True)
     text = Column(String, nullable=False, index=True)
     type = Column(String, nullable=False, index=True)
     description = Column(String, index=True)

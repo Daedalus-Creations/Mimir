@@ -31,6 +31,7 @@ def search_query(quotes: Query, search: QuoteSearch, skip=0, limit=100):
     text = search.text
     quote_type = search.quote_type
     description = search.description
+    author = search.author
     # public = search.public
     color = search.color
     tags = search.tags
@@ -43,6 +44,8 @@ def search_query(quotes: Query, search: QuoteSearch, skip=0, limit=100):
         quotes = quotes.filter(Quote.type == quote_type)
     if description:
         quotes = quotes.filter(Quote.description.ilike(description))
+    if author:
+        quotes = quotes.filter(Quote.author.ilike(author))
     if color:
         quotes = quotes.filter(Quote.color == color.as_hex())
 
@@ -51,7 +54,8 @@ def search_query(quotes: Query, search: QuoteSearch, skip=0, limit=100):
         quotes = quotes.filter(
             or_(Quote.title.ilike(anywhere),
                 Quote.text.ilike(anywhere),
-                Quote.description.ilike(anywhere))
+                Quote.description.ilike(anywhere),
+                Quote.author.ilike(author))
         )
     quotes = quotes.offset(skip).limit(limit).all()
 
