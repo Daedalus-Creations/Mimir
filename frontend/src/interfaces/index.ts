@@ -1,22 +1,25 @@
-export enum type { BOOK='Book',
-            FILM='Film',
-            POEM='Poem',
-            SPEECH='Speech',
-            WEB='Web',
-            LYRICS= 'Lyrics',
-            OTHER='Other',
-            UNCATEGORIZED='Uncategorized'}
+export const type = Object.freeze({
+            UNCATEGORIZED:'Uncategorized',
+            BOOK:'Book',
+            FILM:'Film',
+            POEM:'Poem',
+            SPEECH:'Speech',
+            WEB:'Web',
+            LYRICS: 'Lyrics',
+            OTHER:'Other'});
 
-export const typeIcon = {[type.BOOK]:'book',
-                [type.FILM]:'film',
-                [type.POEM]:'feather',
-                [type.SPEECH]:'comments',
-                [type.WEB]:'globe-americas',
-                [type.LYRICS]: 'music',
-                [type.OTHER]:'elipsis-h',
-                [type.UNCATEGORIZED]:'quote-left'};
+export const typeIcon = new Map<string,string>([
+                        [type.BOOK,'book'],
+                        [type.FILM,'film'],
+                        [type.POEM,'feather'],
+                        [type.SPEECH,'comment'],
+                        [type.WEB,'globe-americas'],
+                        [type.LYRICS, 'music'],
+                        [type.OTHER,'ellipsis-h'],
+                        [type.UNCATEGORIZED,'quote-right']]);
 
-export const defaultQuote = {
+export const defaultQuote: IQuoteCreate = {
+                author: '',
                 title: '',
                 type: type.UNCATEGORIZED,
                 text: '',
@@ -51,8 +54,9 @@ export interface IUserProfileCreate {
 }
 
 export interface IQuote {
+    author: string;
     title: string;
-    type: type;
+    type: string;
     text: string;
     description?: string;
     public?: boolean;
@@ -63,8 +67,9 @@ export interface IQuote {
 }
 
 export interface IQuoteUpdate {
+    author?: string;
     title?: string;
-    type?: type;
+    type?: string;
     text?: string;
     description?: string;
     public?: boolean;
@@ -73,8 +78,9 @@ export interface IQuoteUpdate {
 }
 
 export interface IQuoteCreate {
+    author?: string;
     title?: string;
-    type: type;
+    type: string;
     text: string;
     description?: string;
     public?: boolean;

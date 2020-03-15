@@ -15,6 +15,7 @@ import {
     commitSetQuotes,
 } from './mutations';
 import { AppNotification, MainState } from './state';
+import {IQuote, IQuoteCreate, IQuoteUpdate} from "@/interfaces";
 
 type MainContext = ActionContext<MainState, State>;
 
@@ -162,9 +163,39 @@ export const actions = {
                 commitSetQuotes(context, response.data);
             }
         } catch (error) {
-            //error handling
+            throw error; //error handling
         }
     },
+    async updateQuote(context: MainContext, payload: IQuote){
+        try{
+            var quote = Object.assign({},payload); // copy quote
+            delete quote.id; // remove id property
+            delete quote.owner_id; // remove owner id property
+            const quoteUpdate : IQuoteUpdate = quote; // verify with interface
+
+            await api.updateQuote(context.state.token, payload.id, quoteUpdate);
+        }
+        catch(error){
+            throw error; //error handling
+        }
+    },
+    async createQuote(context: MainContext, payload: IQuoteCreate){
+        try{
+            await api.createQuote(context.state.token, payload);
+        }
+        catch(error){
+           throw error; //error handling
+        }
+    },
+    async deleteQuote(context: MainContext, id : number){
+        try{
+            await api.deleteQuote(context.state.token, id);
+        }
+        catch(error){
+          throw error;  //error handling
+        }
+    },
+
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -183,3 +214,6 @@ export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
 export const dispatchLoadQuotes = dispatch(actions.loadQuotes);
+export const dispatchUpdateQuote = dispatch(actions.updateQuote);
+export const dispatchCreateQuote = dispatch(actions.createQuote);
+export const dispatchDeleteQuote = dispatch(actions.deleteQuote);

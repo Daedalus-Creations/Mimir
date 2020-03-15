@@ -1,11 +1,11 @@
 <template>
-    <div class="notification" :style="colorStyle">
+    <div class="notification" :style="colorStyle" >
         <b-loading :active.sync="isLoading" :is-full-page="false" :can-cancel="true"></b-loading>
         <div class="level is-mobile">
             <div class="level-left">
                 <div class="level-item">
                     <h1 class="title is-5">
-                        <b-icon icon="book"></b-icon>
+                        <b-icon :icon="typeIconName(quote.type)"></b-icon>
                     </h1>
                 </div>
                 <div class="level-item">
@@ -18,75 +18,15 @@
             </div>
             <div class="level-right">
                 <div class="level-item">
-                    <b-dropdown aria-role="list">
+                    <b-dropdown aria-role="list" v-model="quote.type">
                         <b-button inverted rounded outlined size="is-small" type="is-info" slot="trigger">Type</b-button>
-                        <b-dropdown-item value="uncategorized" aria-role="listitem">
+                        <b-dropdown-item v-for="quoteType in type" :value="quoteType" aria-role="listitem">
                             <div class="media">
                                 <div class="media-left">
-                                    <b-icon icon="quote-right"></b-icon>
+                                    <b-icon :icon="typeIconName(quoteType)"></b-icon>
                                 </div>
                                 <div class="media-content">
-                                    <h3>Uncategorized</h3>
-                                </div>
-                            </div>
-                        </b-dropdown-item>
-                        <b-dropdown-item value="book" aria-role="listitem">
-                            <div class="media">
-                                <div class="media-left">
-                                    <b-icon icon="book"></b-icon>
-                                </div>
-                                <div class="media-content">
-                                    <h3>Book</h3>
-                                </div>
-                            </div>
-                        </b-dropdown-item>
-                        <b-dropdown-item value="movie" aria-role="listitem">
-                            <div class="media">
-                                <div class="media-left">
-                                    <b-icon icon="film"></b-icon>
-                                </div>
-                                <div class="media-content">
-                                    <h3>Film</h3>
-                                </div>
-                            </div>
-                        </b-dropdown-item>
-                        <b-dropdown-item value="poem" aria-role="listitem">
-                            <div class="media">
-                                <div class="media-left">
-                                    <b-icon icon="feather"></b-icon>
-                                </div>
-                                <div class="media-content">
-                                    <h3>Poem</h3>
-                                </div>
-                            </div>
-                        </b-dropdown-item>
-                        <b-dropdown-item value="speech" aria-role="listitem">
-                            <div class="media">
-                                <div class="media-left">
-                                    <b-icon icon="comment"></b-icon>
-                                </div>
-                                <div class="media-content">
-                                    <h3>Speech</h3>
-                                </div>
-                            </div>
-                        </b-dropdown-item>
-                        <b-dropdown-item value="lyrics" aria-role="listitem">
-                            <div class="media">
-                                <div class="media-left">
-                                    <b-icon icon="music"></b-icon>
-                                </div>
-                                <div class="media-content">
-                                    <h3>Lyrics</h3>
-                                </div>
-                            </div>
-                        </b-dropdown-item>
-                        <b-dropdown-item value="other" aria-role="listitem">
-                            <div class="media">
-                                <div class="media-left">
-                                    <b-icon icon="ellipsis-h"></b-icon>
-                                </div>
-                                <div class="media-content">
-                                    <h3>Other</h3>
+                                    <h3>{{quoteType}}</h3>
                                 </div>
                             </div>
                         </b-dropdown-item>
@@ -107,7 +47,7 @@
                                 type="is-success"
                                 size="is-small"
                                 rounded
-                                @click="submit"
+                                @click="submit()"
                         >
                             <b-icon icon="check"></b-icon>
                         </b-button>
@@ -156,13 +96,29 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator'
-    import {IQuoteCreate, defaultQuote} from "@/interfaces";
+    import {Component, Emit, Vue} from 'vue-property-decorator';
+    import {IQuoteCreate, defaultQuote, typeIcon, type} from "@/interfaces";
+    import {dispatchCreateQuote, dispatchLoadQuotes} from "@/store/main/actions";
+    import Swatches from "vue-swatches";
+    import "vue-swatches/dist/vue-swatches.min.css";
 
     var tinycolor = require("tinycolor2");
 
+    @Component({
+        components: {
+            Swatches
+        }
+    })
     export default class NewQuote extends Vue {
-        public quote : IQuoteCreate = defaultQuote;
+        public quote : IQuoteCreate = Object.assign({}, defaultQuote); // copy defaults to initialize
+        public isLoading: boolean = false; // Loading flag
+
+        typeIconName(type) : string | undefined {
+            return typeIcon.get(type); //get icon name based on type enum
+        }
+        get type() {
+            return type; //get type enum/object
+        }
 
         get colorStyle() {
             const background = tinycolor(this.quote.color); //get background color
@@ -171,7 +127,7 @@
                 .darken()
                 .toHexString() : tinycolor(this.quote.color)
                 .brighten()
-                .toHexString(); //lighten
+                .toHexString(); //lighten or darken background color to get outline/placeholder color
 
             const accent = textColor;
             return {
@@ -181,6 +137,29 @@
                 "--accent-color": accent,
                 "--button-color": textColor,
             };
+        }
+
+        async submit() {
+            try {
+                this.isLoading = true; //set loading flag
+                await dispatchCreateQuote(this.$store, this.quote); // push quote to server
+                this.$buefy.toast.open({
+                    message: 'Quote Created',
+                    type: 'is-success'
+                })
+            }
+            catch(error){
+                this.$buefy.toast.open({
+                    message: 'Something went wrong',
+                    type: 'is-danger'
+                })
+            }
+            finally {
+                this.isLoading = false; //reset loading flag
+                this.quote = Object.assign({}, defaultQuote); //reset content
+                this.$emit('close'); //close modal
+                await dispatchLoadQuotes(this.$store); //refresh
+            }
         }
     }
 </script>
@@ -192,8 +171,7 @@
         --button-color: #fff;
     }
     /deep/ ::placeholder {
-        color: var(--placeholder-color); /*#c8e7ff;*/
-        opacity: 70%;
+        color: var(--placeholder-color);
     }
     /*
     /deep/ button{
