@@ -1,5 +1,5 @@
 <template>
-    <div class="notification" :style="colorStyle" >
+    <div class="notification" :style="colorStyle" style="width:960px">
         <b-loading :active.sync="isLoading" :is-full-page="false" :can-cancel="true"></b-loading>
         <div class="level is-mobile">
             <div class="level-left">

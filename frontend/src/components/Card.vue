@@ -1,5 +1,5 @@
 <template>
-    <div class="notification" :style="colorStyle" >
+    <div class="notification" :style="colorStyle">
         <b-loading :active.sync="isLoading" :is-full-page="false" :can-cancel="true"></b-loading>
         <div class="level is-mobile">
             <div class="level-left">
@@ -214,6 +214,7 @@
                     message: 'Changes Saved',
                     type: 'is-success'
                 })
+                await dispatchLoadQuotes(this.$store); // refresh
             }
             catch(error){
                 this.$buefy.toast.open({
@@ -224,7 +225,6 @@
             finally {
                 this.isLoading = false; //reset loading flag
                 this.editable=false;
-                await dispatchLoadQuotes(this.$store); // refresh
             }
         }
         confirmDelete() {
