@@ -31,6 +31,8 @@ jinja2 = "*"
 psycopg2-binary = "*"
 alembic = "*"
 sqlalchemy = "*"
+google = "*"
+oauth2client = "*"
 
 [requires]
 python_version = "3.6"

@@ -53,3 +53,41 @@ FIRST_SUPERUSER_PASSWORD = os.getenv("FIRST_SUPERUSER_PASSWORD")
 USERS_OPEN_REGISTRATION = getenv_boolean("USERS_OPEN_REGISTRATION")
 
 EMAIL_TEST_USER = "test@example.com"
+
+
+GOOGLE_CLIENT_ID = "1007436511433-1o329ffhgodf6ipbmgqm99r2kkjsoj9u.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRETS_JSON = "client_secret_1007436511433-1o329ffhgodf6ipbmgqm99r2kkjsoj9u.apps.googleusercontent.com.json"
+
+google_login_javascript_client = f"""<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/Article">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-signin-client_id" content="{GOOGLE_CLIENT_ID}">
+    <title>Google Login</title><script src="https://apis.google.com/js/platform.js" async defer></script>
+    <body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <script>function onSignIn(googleUser) {{
+
+  var id_token = googleUser.getAuthResponse().id_token;
+    var xhr = new XMLHttpRequest();
+xhr.open('POST', '{SERVER_NAME}{API_V1_STR}/login/access-token'); 
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+xhr.setRequestHeader('X-Google-OAuth2-Type', 'client');
+xhr.onload = function() {{
+   console.log('Signed in as: ' + xhr.responseText);
+}};
+xhr.send(id_token);
+}}</script>
+<div><br></div>
+<a href="#" onclick="signOut();">Sign out</a>
+<script>
+  function signOut() {{
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {{
+      console.log('User signed out.');
+    }});
+  }}
+</script>
+</body>
+</html>"""
