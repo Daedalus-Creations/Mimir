@@ -138,7 +138,7 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
         for field in obj_data:
             if field in update_data:
                 if field == "color":
-                    setattr(db_obj, field, update_data[field].color.as_hex())
+                    setattr(db_obj, field, update_data[field].as_hex())
                 else:
                     setattr(db_obj, field, update_data[field])
 
