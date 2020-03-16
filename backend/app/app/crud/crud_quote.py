@@ -129,5 +129,38 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
 
         return search_query(quotes, search, skip, limit)
 
+    def update(
+        self, db_session: Session, *, db_obj: Quote, obj_in: QuoteUpdate
+    ) -> Quote:
+        obj_data = jsonable_encoder(db_obj)
+        update_data = obj_in.dict(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                if field == "color":
+                    setattr(db_obj, field, update_data[field].color.as_hex())
+                else:
+                    setattr(db_obj, field, update_data[field])
+
+
+        db_session.add(db_obj)
+        db_session.commit()
+        db_session.refresh(db_obj)
+
+        # tags = [crud_tag.get(db_session, tag.id) for tag in obj_in.tags]
+        # logger.info(tags)
+        # color = obj_in.color.as_hex() if obj_in.color else None
+        # db_obj = self.model(title=obj_in.title,
+        #                     text=obj_in.text,
+        #                     type=obj_in.type,
+        #                     description=obj_in.description,
+        #                     public=obj_in.public,
+        #                     owner_id=owner_id,
+        #                     color=color,
+        #                     tags=tags)
+        # db_session.add(db_obj)
+        # db_session.commit()
+        # db_session.refresh(db_obj)
+
+        return db_obj
 
 quote = CRUDQuote(Quote)
