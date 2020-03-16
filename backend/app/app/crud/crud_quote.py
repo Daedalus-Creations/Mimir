@@ -74,6 +74,7 @@ class CRUDQuote(CRUDBase[Quote, QuoteCreate, QuoteUpdate]):
         db_obj = self.model(title=obj_in.title,
                             text=obj_in.text,
                             type=obj_in.type,
+                            author=obj_in.author,
                             description=obj_in.description,
                             public=obj_in.public,
                             owner_id=owner_id,
