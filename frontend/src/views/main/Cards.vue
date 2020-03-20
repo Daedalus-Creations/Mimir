@@ -42,13 +42,13 @@
                     small
                     :key="quoteType"
                     :color="typeColor(quoteType)+' darken-2'"
-                    @click="newQuoteOpen=true"
+                    @click="newQuote(quoteType)"
             >
                 <v-icon>fas fa-{{typeIconName(quoteType)}}</v-icon>
             </v-btn>
         </v-speed-dial>
     <b-modal :active.sync="newQuoteOpen" trap-focus has-modal-card >
-        <NewQuote @close="()=>{newQuoteOpen=false}" ></NewQuote>
+        <NewQuote @close="()=>{newQuoteOpen=false}" :initType="newQuoteType"></NewQuote>
     </b-modal>
 </div>
 </template>
@@ -69,22 +69,29 @@
     })
 
     export default class Cards extends Vue {
-        public fab : boolean = false;
+        public fab : boolean = false; //floating button flag
         public newQuoteOpen : boolean = false;
+        public newQuoteType: type = type.BOOK;
 
         typeIconName(type) : string | undefined {
-            return typeIcon.get(type); //get icon name based on type enum
+            return typeIcon.get(type); // get icon name based on type enum
         }
         typeColor(type) : string | undefined {
-            return typeColor.get(type);
+            return typeColor.get(type); // get color based on type
         }
         get type() {
-            return type; //get type enum/object
+            return type; // get type enum/object
         }
 
         get quotes() {
-            return readQuotes(this.$store);
+            return readQuotes(this.$store); // read quotes to display from store
         }
+
+        newQuote(quoteType : type){
+            this.newQuoteType = quoteType; // open modal
+            this.newQuoteOpen = true; // set quote type
+        }
+
         created() {
             dispatchLoadQuotes(this.$store); //read quotes from server on creation
         }

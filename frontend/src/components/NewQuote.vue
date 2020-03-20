@@ -20,7 +20,7 @@
                 <div class="level-item">
                     <b-dropdown aria-role="list" v-model="quote.type">
                         <b-button inverted rounded outlined size="is-small" type="is-info" slot="trigger">Type</b-button>
-                        <b-dropdown-item v-for="quoteType in type" :value="quoteType" aria-role="listitem">
+                        <b-dropdown-item v-for="quoteType in type" :key="quoteType" :value="quoteType" aria-role="listitem">
                             <div class="media">
                                 <div class="media-left">
                                     <b-icon :icon="typeIconName(quoteType)"></b-icon>
@@ -62,20 +62,6 @@
               v-model="quote.text"
               ></textarea>
         </div>
-            <!--<div class="level">
-                <div class="level-left">
-                    <div class="level-item">
-                        <vue-tags-input
-                                class="nostyle"
-                                :class="editable ? 'editable' : ''"
-                                v-model="tagInput"
-                                :tags="quote.tags"
-                                :disabled="!editable"
-                                @tags-changed="newTags => tags = newTags"
-                        />
-                    </div>
-                </div>
-            </div>-->
             <div class="level is-mobile">
                 <div class="level-left">
                     <div class="level-item">
@@ -96,8 +82,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Vue} from 'vue-property-decorator';
-    import {IQuoteCreate, defaultQuote, typeIcon, type} from "@/interfaces";
+    import {Component, Emit, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {IQuoteCreate, defaultQuote, typeIcon, type, typeColor} from "@/interfaces";
     import {dispatchCreateQuote, dispatchLoadQuotes} from "@/store/main/actions";
     import Swatches from 'vue-swatches';
     import "vue-swatches/dist/vue-swatches.min.css";
@@ -113,24 +99,28 @@
     export default class NewQuote extends Vue {
         public quote : IQuoteCreate = Object.assign({}, defaultQuote); // copy defaults to initialize
         public isLoading: boolean = false; // Loading flag
-
+        
+       
         typeIconName(type) : string | undefined {
             return typeIcon.get(type); //get icon name based on type enum
         }
         get type() {
             return type; //get type enum/object
         }
+        typeColor(type) : string | undefined {
+            return typeColor.get(type);
+        }
 
         get colorStyle() {
-            const background = tinycolor(this.quote.color); //get background color
-            const textColor = background.isLight() ? '#000' : "#fff"; //invert to get text color
-            const outline = background.isLight() ? tinycolor(this.quote.color)
+            let background = tinycolor(this.quote.color); //get background color
+            let textColor = background.isLight() ? '#000' : "#fff"; //invert to get text color
+            let outline = background.isLight() ? tinycolor(this.quote.color)
                 .darken()
                 .toHexString() : tinycolor(this.quote.color)
                 .brighten()
                 .toHexString(); //lighten or darken background color to get outline/placeholder color
 
-            const accent = textColor;
+            let accent = textColor;
             return {
                 background: background.toHexString(),
                 color: textColor,
@@ -156,6 +146,7 @@
                 await dispatchLoadQuotes(this.$store); //refresh
             }
         }
+
     }
 </script>
 
@@ -168,12 +159,6 @@
     /deep/ ::placeholder {
         color: var(--placeholder-color);
     }
-    /*
-    /deep/ button{
-      border-color: var(--button-color) !important;
-      color: var(--button-color) ;
-      background: var(--button-color) !important;
-    }*/
     /deep/ .ti-input {
         border: None;
     }

@@ -23,7 +23,7 @@
                 <div class="level-item" v-if="editable">
                     <b-dropdown aria-role="list" v-model="quote.type">
                         <b-button inverted rounded outlined size="is-small" type="is-info" slot="trigger">Type</b-button>
-                        <b-dropdown-item v-for="quoteType in type" :value="quoteType" aria-role="listitem">
+                        <b-dropdown-item v-for="quoteType in type" :key="quoteType" :value="quoteType" aria-role="listitem">
                             <div class="media">
                                 <div class="media-left">
                                     <b-icon :icon="typeIconName(quoteType)"></b-icon>
@@ -107,20 +107,6 @@
       ></textarea>
         </div>
             <b-collapse :open.sync="isOpen" aria-id="collapsable">
-        <!--<div class="level">
-            <div class="level-left">
-                <div class="level-item">
-                    <vue-tags-input
-                            class="nostyle"
-                            :class="editable ? 'editable' : ''"
-                            v-model="tagInput"
-                            :tags="quote.tags"
-                            :disabled="!editable"
-                            @tags-changed="newTags => tags = newTags"
-                    />
-                </div>
-            </div>
-        </div>-->
         <div class="level is-mobile">
             <div class="level-left">
                 <div class="level-item">
@@ -203,8 +189,8 @@
         }
 
         async updateQuote() {
-            this.isLoading = true; //set loading flag
-            try {
+            try {               
+                this.isLoading = true; //set loading flag
                 if (this.quote)
                     await dispatchUpdateQuote(this.$store, this.quote); // send request to server
                 else
@@ -234,15 +220,15 @@
         }
         async deleteQuote() {
             try {
-                this.isLoading = true;
+                this.isLoading = true; // set loading flag
                 if (this.quote)
-                    await dispatchDeleteQuote(this.$store, this.quote.id);
+                    await dispatchDeleteQuote(this.$store, this.quote.id); // make api call
                 else
                     throw "quote undefined";
-                commitAddNotification(this.$store, { content: 'Quote Deleted', color: 'success' });
+                commitAddNotification(this.$store, { content: 'Quote Deleted', color: 'success' }); // send notification
             }
             catch(error){
-                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); //send notification
+                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); // send notification
             }
             finally {
                 this.isLoading = false; //reset loading flag
