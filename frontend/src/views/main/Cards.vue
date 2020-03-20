@@ -20,16 +20,33 @@
         </div>
     </section>
 
-    <b-button
-            v-if="!newQuoteOpen"
-            type="is-primary"
-            size="is-large"
-            rounded
-            style="bottom:10vh;right:10vh;position:fixed;z-index: 9999"
-            @click="newQuoteOpen=true"
-    >
-        <b-icon icon="plus"></b-icon>
-    </b-button>
+    <v-speed-dial
+                v-model="fab"
+                bottom right fixed direction="left"               
+                transition="slide-x-reverse-transition"
+        >
+            <template slot="activator">
+                <v-btn
+                        v-model="fab"
+                        color="blue darken-2"
+                        dark
+                        fab
+                >
+                    <v-icon v-if="!fab">fas fa-plus</v-icon>
+                    <v-icon v-else>fas fa-times</v-icon>
+                </v-btn>
+            </template>
+            <v-btn  v-for="quoteType in type"
+                    fab
+                    dark
+                    small
+                    :key="quoteType"
+                    :color="typeColor(quoteType)+' darken-2'"
+                    @click="newQuoteOpen=true"
+            >
+                <v-icon>fas fa-{{typeIconName(quoteType)}}</v-icon>
+            </v-btn>
+        </v-speed-dial>
     <b-modal :active.sync="newQuoteOpen" trap-focus has-modal-card >
         <NewQuote @close="()=>{newQuoteOpen=false}" ></NewQuote>
     </b-modal>
@@ -42,16 +59,28 @@
     import { Component, Vue } from 'vue-property-decorator'
     import {readQuotes} from '@/store/main/getters.ts'
     import {dispatchLoadQuotes} from "@/store/main/actions";
+    import {typeIcon, type, typeColor} from "@/interfaces";
 
     @Component({
         components: {
-            Card,
             NewQuote,
+            Card
         }
     })
 
     export default class Cards extends Vue {
-        public newQuoteOpen: boolean = false;
+        public fab : boolean = false;
+        public newQuoteOpen : boolean = false;
+
+        typeIconName(type) : string | undefined {
+            return typeIcon.get(type); //get icon name based on type enum
+        }
+        typeColor(type) : string | undefined {
+            return typeColor.get(type);
+        }
+        get type() {
+            return type; //get type enum/object
+        }
 
         get quotes() {
             return readQuotes(this.$store);

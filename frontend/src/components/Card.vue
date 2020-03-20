@@ -146,7 +146,7 @@
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator'
     import {readQuotes} from '@/store/main/getters.ts'
-    import {commitSetQuote} from "@/store/main/mutations";
+    import {commitAddNotification, commitSetQuote} from "@/store/main/mutations";
     import {IQuote, type, typeIcon} from "@/interfaces";
     import {dispatchDeleteQuote, dispatchLoadQuotes, dispatchUpdateQuote} from "@/store/main/actions";
     import Swatches from 'vue-swatches';
@@ -210,17 +210,11 @@
                 else
                     throw "quote undefined";
 
-                this.$buefy.toast.open({
-                    message: 'Changes Saved',
-                    type: 'is-success'
-                })
+                commitAddNotification(this.$store, { content: 'Changes saved', color: 'success' }); //send notification
                 await dispatchLoadQuotes(this.$store); // refresh
             }
             catch(error){
-                this.$buefy.toast.open({
-                    message: 'Something went wrong',
-                    type: 'is-danger'
-                })
+                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); //send notification
             }
             finally {
                 this.isLoading = false; //reset loading flag
@@ -245,16 +239,10 @@
                     await dispatchDeleteQuote(this.$store, this.quote.id);
                 else
                     throw "quote undefined";
-                this.$buefy.toast.open({
-                    message: 'Quote Deleted',
-                    type: 'is-success'
-                })
+                commitAddNotification(this.$store, { content: 'Quote Deleted', color: 'success' });
             }
             catch(error){
-                this.$buefy.toast.open({
-                    message: 'Something went wrong',
-                    type: 'is-danger'
-                })
+                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); //send notification
             }
             finally {
                 this.isLoading = false; //reset loading flag

@@ -99,8 +99,9 @@
     import {Component, Emit, Vue} from 'vue-property-decorator';
     import {IQuoteCreate, defaultQuote, typeIcon, type} from "@/interfaces";
     import {dispatchCreateQuote, dispatchLoadQuotes} from "@/store/main/actions";
-    import Swatches from "vue-swatches";
+    import Swatches from 'vue-swatches';
     import "vue-swatches/dist/vue-swatches.min.css";
+    import {commitAddNotification} from "@/store/main/mutations";
 
     var tinycolor = require("tinycolor2");
 
@@ -143,16 +144,10 @@
             try {
                 this.isLoading = true; //set loading flag
                 await dispatchCreateQuote(this.$store, this.quote); // push quote to server
-                this.$buefy.toast.open({
-                    message: 'Quote Created',
-                    type: 'is-success'
-                })
+                commitAddNotification(this.$store, { content: 'Quote Created', color: 'success' }); //send notification
             }
             catch(error){
-                this.$buefy.toast.open({
-                    message: 'Something went wrong',
-                    type: 'is-danger'
-                })
+                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); //send notification
             }
             finally {
                 this.isLoading = false; //reset loading flag
