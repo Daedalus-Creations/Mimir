@@ -46,14 +46,14 @@
               label="Is Active"
               v-model="isActive"
             ></v-checkbox>
-            <v-layout align-center>
-              <v-flex shrink>
+            <v-row align="center">
+              <v-col class="shrink" >
                 <v-checkbox
                   v-model="setPassword"
                   class="mr-2"
                 ></v-checkbox>
-              </v-flex>
-              <v-flex>
+              </v-col>
+              <v-col>
                 <v-text-field
                   :disabled="!setPassword"
                   type="password"
@@ -78,8 +78,8 @@
                   :error-messages="errors.first('password_confirmation')"
                 >
                 </v-text-field>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-form>
         </template>
       </v-card-text>
@@ -99,10 +99,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { IUserProfile, IUserProfileUpdate } from '@/interfaces';
-import { dispatchGetUsers, dispatchUpdateUser } from '@/store/admin/actions';
-import { readAdminOneUser } from '@/store/admin/getters';
+import {Component, Vue} from 'vue-property-decorator';
+import {IUserProfile, IUserProfileUpdate} from '@/interfaces';
+import {dispatchGetUsers, dispatchUpdateUser} from '@/store/admin/actions';
+import {readAdminOneUser} from '@/store/admin/getters';
 
 @Component
 export default class EditUser extends Vue {
@@ -151,7 +151,7 @@ export default class EditUser extends Vue {
       if (this.setPassword) {
         updatedProfile.password = this.password1;
       }
-      await dispatchUpdateUser(this.$store, { id: this.user!.id, user: updatedProfile });
+      await dispatchUpdateUser(this.$store, {id: this.user!.id, user: updatedProfile});
       this.$router.push('/main/admin/users');
     }
   }

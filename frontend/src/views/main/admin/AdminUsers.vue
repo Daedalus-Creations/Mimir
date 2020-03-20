@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-toolbar light>
-      <v-toolbar-title>
+    <v-app-bar light>
+      <v-app-bar-title>
         Manage Users
-      </v-toolbar-title>
+      </v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" to="/main/admin/users/create">Create User</v-btn>
-    </v-toolbar>
+    </v-app-bar>
     <v-data-table :headers="headers" :items="users">
       <template slot="items" slot-scope="props">
         <td>{{ props.item.name }}</td>
@@ -17,9 +17,11 @@
         <td class="justify-center layout px-0">
           <v-tooltip top>
             <span>Edit</span>
-            <v-btn slot="activator" flat :to="{name: 'main-admin-users-edit', params: {id: props.item.id}}">
+            <template v-slot:activator="{ on }">
+            <v-btn v-on="on" flat :to="{name: 'main-admin-users-edit', params: {id: props.item.id}}">
               <v-icon>edit</v-icon>
             </v-btn>
+            </template>
           </v-tooltip>
         </td>
       </template>

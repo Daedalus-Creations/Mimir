@@ -1,13 +1,13 @@
 <template>
   <v-content>
-    <v-container fluid fill-height>
-      <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+    <v-container class="fill-height" fluid >
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-              <v-toolbar-title>{{appName}}</v-toolbar-title>
+            <v-app-bar dark color="primary">
+              <v-app-bar-title>{{appName}}</v-app-bar-title>
               <v-spacer></v-spacer>
-            </v-toolbar>
+            </v-app-bar>
             <v-card-text>
               <v-form @keyup.enter="submit">
                 <v-text-field @keyup.enter="submit" v-model="email" prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
@@ -18,25 +18,25 @@
                   Incorrect email or password
                 </v-alert>
               </div>
-              <v-flex class="caption text-xs-right"><router-link to="/recover-password">Forgot your password?</router-link></v-flex>
+              <v-col class="caption text-right"><router-link to="/recover-password">Forgot your password?</router-link></v-col>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn @click.prevent="submit">Login</v-btn>
             </v-card-actions>
           </v-card>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </v-content>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { api } from '@/api';
-import { appName } from '@/env';
-import { readLoginError } from '@/store/main/getters';
-import { dispatchLogIn } from '@/store/main/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {api} from '@/api';
+import {appName} from '@/env';
+import {readLoginError} from '@/store/main/getters';
+import {dispatchLogIn} from '@/store/main/actions';
 
 @Component
 export default class Login extends Vue {

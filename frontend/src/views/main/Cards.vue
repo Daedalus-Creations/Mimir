@@ -25,7 +25,7 @@
                 bottom right fixed direction="left"               
                 transition="slide-x-reverse-transition"
         >
-            <template slot="activator">
+            <template v-slot:activator>
                 <v-btn
                         v-model="fab"
                         color="blue darken-2"
@@ -44,12 +44,12 @@
                     :color="typeColor(quoteType)+' darken-2'"
                     @click="newQuote(quoteType)"
             >
-                <v-icon>fas fa-{{typeIconName(quoteType)}}</v-icon>
+                <v-icon small>fas fa-{{typeIconName(quoteType)}}</v-icon>
             </v-btn>
         </v-speed-dial>
-    <b-modal :active.sync="newQuoteOpen" trap-focus has-modal-card >
+    <v-dialog v-model="newQuoteOpen" max-width=960>
         <NewQuote @close="()=>{newQuoteOpen=false}" :initType="newQuoteType"></NewQuote>
-    </b-modal>
+    </v-dialog>
 </div>
 </template>
 

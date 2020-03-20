@@ -1,5 +1,5 @@
 <template>
-    <div class="notification" :style="colorStyle" style="width:960px">
+    <!--<div class="notification" :style="colorStyle" style="width:960px">
         <b-loading :active.sync="isLoading" :is-full-page="false" :can-cancel="true"></b-loading>
         <div class="level is-mobile">
             <div class="level-left">
@@ -78,7 +78,14 @@
 
             </div>
 
-    </div>
+    </div>-->
+    <v-card :loading="isLoading" color="blue darken-2">
+        <v-container>
+            <v-form>
+                <v-textarea filled label="Title" />
+            </v-form>
+        </v-container>
+    </v-card>
 </template>
 
 <script lang="ts">
@@ -111,24 +118,7 @@
             return typeColor.get(type);
         }
 
-        get colorStyle() {
-            let background = tinycolor(this.quote.color); //get background color
-            let textColor = background.isLight() ? '#000' : "#fff"; //invert to get text color
-            let outline = background.isLight() ? tinycolor(this.quote.color)
-                .darken()
-                .toHexString() : tinycolor(this.quote.color)
-                .brighten()
-                .toHexString(); //lighten or darken background color to get outline/placeholder color
-
-            let accent = textColor;
-            return {
-                background: background.toHexString(),
-                color: textColor,
-                "--placeholder-color": outline,
-                "--accent-color": accent,
-                "--button-color": textColor,
-            };
-        }
+        
 
         async submit() {
             try {

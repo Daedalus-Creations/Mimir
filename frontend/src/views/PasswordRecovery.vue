@@ -1,12 +1,12 @@
 <template>
   <v-content>
-    <v-container fluid fill-height>
-      <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+    <v-container class="fill-height" fluid >
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-              <v-toolbar-title>{{appName}} - Password Recovery</v-toolbar-title>
-            </v-toolbar>
+            <v-app-bar dark color="primary">
+              <v-app-bar-title>{{appName}} - Password Recovery</v-app-bar-title>
+            </v-app-bar>
             <v-card-text>
               <p class="subheading">A password recovery email will be sent to the registered account</p>
               <v-form @keyup.enter="submit" v-model="valid" ref="form" @submit.prevent="" lazy-validation>
@@ -21,16 +21,16 @@
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </v-content>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { appName } from '@/env';
-import { dispatchPasswordRecovery } from '@/store/main/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {appName} from '@/env';
+import {dispatchPasswordRecovery} from '@/store/main/actions';
 
 @Component
 export default class Login extends Vue {
@@ -43,7 +43,7 @@ export default class Login extends Vue {
   }
 
   public submit() {
-    dispatchPasswordRecovery(this.$store, { username: this.username });
+    dispatchPasswordRecovery(this.$store, {username: this.username});
   }
 }
 </script>

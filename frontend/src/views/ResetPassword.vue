@@ -1,12 +1,12 @@
 <template>
   <v-content>
-    <v-container fluid fill-height>
-      <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+    <v-container class="fill-height" fluid >
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-              <v-toolbar-title>{{appName}} - Reset Password</v-toolbar-title>
-            </v-toolbar>
+            <v-app-bar dark color="primary">
+              <v-app-bar-title>{{appName}} - Reset Password</v-app-bar-title>
+            </v-app-bar>
             <v-card-text>
               <p class="subheading">Enter your new password below</p>
               <v-form @keyup.enter="submit" v-model="valid" ref="form" @submit.prevent="" lazy-validation>
@@ -23,19 +23,19 @@
               <v-btn @click="submit" :disabled="!valid">Save</v-btn>
             </v-card-actions>
           </v-card>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </v-content>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { IUserProfileUpdate } from '@/interfaces';
-import { appName } from '@/env';
-import { commitAddNotification } from '@/store/main/mutations';
-import { dispatchResetPassword } from '@/store/main/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {Store} from 'vuex';
+import {IUserProfileUpdate} from '@/interfaces';
+import {appName} from '@/env';
+import {commitAddNotification} from '@/store/main/mutations';
+import {dispatchResetPassword} from '@/store/main/actions';
 
 @Component
 export default class UserProfileEdit extends Vue {
@@ -75,7 +75,7 @@ export default class UserProfileEdit extends Vue {
     if (await this.$validator.validateAll()) {
       const token = this.checkToken();
       if (token) {
-        await dispatchResetPassword(this.$store, { token, password: this.password1 });
+        await dispatchResetPassword(this.$store, {token, password: this.password1});
         this.$router.push('/');
       }
     }
