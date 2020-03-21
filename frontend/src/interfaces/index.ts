@@ -1,12 +1,12 @@
-export const type = Object.freeze({
-    UNCATEGORIZED:'Uncategorized',
-    BOOK:'Book',
-    FILM:'Film',
-    POEM:'Poem',
-    SPEECH:'Speech',
-    WEB:'Web',
-    LYRICS: 'Lyrics',
-    OTHER:'Other'});
+export enum type  {
+    UNCATEGORIZED='Uncategorized',
+    BOOK='Book',
+    FILM='Film',
+    POEM='Poem',
+    SPEECH='Speech',
+    WEB='Web',
+    LYRICS= 'Lyrics',
+    OTHER='Other'};
 
 export const typeColor = new Map<string,string>([
     [type.BOOK,'blue'],
