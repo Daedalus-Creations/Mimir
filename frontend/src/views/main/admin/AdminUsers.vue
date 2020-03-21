@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-app-bar light>
-      <v-app-bar-title>
+      <v-toolbar-title>
         Manage Users
-      </v-app-bar-title>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" to="/main/admin/users/create">Create User</v-btn>
     </v-app-bar>

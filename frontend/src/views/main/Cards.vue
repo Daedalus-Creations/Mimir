@@ -7,18 +7,16 @@
             :id="quote.id"
     ></Card>
     </div>
-    <section class="hero" style="height:100%" v-else>
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <h1 class="title">
-                    <b-icon icon="quote-right"></b-icon>
-                </h1>
-                <h2 class="subtitle">
-                    Add some quotes
-                </h2>
-            </div>
-        </div>
-    </section>
+    <v-container class="fill-height" v-else>
+          <v-row align="center" justify="center">
+            <v-col>
+              <div class="text-center">
+                <v-icon>fas fa-quote-right</v-icon>
+                <div class="subheading my-5">Add some quotes</div>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
 
     <v-speed-dial
                 v-model="fab"

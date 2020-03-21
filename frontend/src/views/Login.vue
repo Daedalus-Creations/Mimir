@@ -1,11 +1,11 @@
 <template>
   <v-content>
-    <v-container class="fill-height" fluid >
+    <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
             <v-app-bar dark color="primary">
-              <v-app-bar-title>{{appName}}</v-app-bar-title>
+              <v-toolbar-title>{{appName}}</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-app-bar>
             <v-card-text>
