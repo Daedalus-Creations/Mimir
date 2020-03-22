@@ -44,11 +44,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { IUserProfileUpdate } from '@/interfaces';
-import { readUserProfile } from '@/store/main/getters';
-import { dispatchUpdateUserProfile } from '@/store/main/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {Store} from 'vuex';
+import {IUserProfileUpdate} from '@/interfaces';
+import {readUserProfile} from '@/store/main/getters';
+import {dispatchUpdateUserProfile} from '@/store/main/actions';
 
 @Component
 export default class UserProfileEdit extends Vue {

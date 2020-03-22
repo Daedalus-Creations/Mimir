@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, IQuote,IQuoteCreate,IQuoteUpdate,ITag,ITagCreate,ITagUpdate } from './interfaces';
+import {apiUrl} from '@/env';
+import {IUserProfile, IUserProfileUpdate, IUserProfileCreate, IQuote, IQuoteCreate, IQuoteUpdate, ITag, ITagCreate, ITagUpdate} from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -54,7 +54,7 @@ export const api = {
   async createQuote(token: string, data: IQuoteCreate) {
     return axios.post(`${apiUrl}/api/quotes/`, data, authHeaders(token));
   },
-  async deleteQuote(token: string, quoteId: number){
+  async deleteQuote(token: string, quoteId: number) {
     return axios.delete(`${apiUrl}/api/quotes/${quoteId}`, authHeaders(token));
   },
   async getTags(token: string) {
@@ -69,7 +69,7 @@ export const api = {
   async createTag(token: string, data: ITagCreate) {
     return axios.post(`${apiUrl}/api/tags/`, data, authHeaders(token));
   },
-  async deleteTag(token: string, tagId: number){
+  async deleteTag(token: string, tagId: number) {
     return axios.delete(`${apiUrl}/api/quotes/${tagId}`, authHeaders(token));
-  }
+  },
 };

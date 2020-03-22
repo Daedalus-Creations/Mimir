@@ -13,14 +13,14 @@
             <v-checkbox label="Is Superuser" v-model="isSuperuser"></v-checkbox>
             <div class="subheading secondary--text text--lighten-2">User is active <span v-if="isActive">(currently active)</span><span v-else>(currently not active)</span></div>
             <v-checkbox label="Is Active" v-model="isActive"></v-checkbox>
-            <v-layout align-center>
-              <v-flex>
+            <v-row align="center">
+              <v-col>
                 <v-text-field type="password" ref="password" label="Set Password" data-vv-name="password" data-vv-delay="100" v-validate="{required: true}" v-model="password1" :error-messages="errors.first('password')">
                 </v-text-field>
                 <v-text-field type="password" label="Confirm Password" data-vv-name="password_confirmation" data-vv-delay="100" data-vv-as="password" v-validate="{required: true, confirmed: 'password'}" v-model="password2" :error-messages="errors.first('password_confirmation')">
                 </v-text-field>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-form>
         </template>
       </v-card-text>
@@ -37,13 +37,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator';
 import {
   IUserProfile,
   IUserProfileUpdate,
   IUserProfileCreate,
 } from '@/interfaces';
-import { dispatchGetUsers, dispatchCreateUser } from '@/store/admin/actions';
+import {dispatchGetUsers, dispatchCreateUser} from '@/store/admin/actions';
 
 @Component
 export default class CreateUser extends Vue {

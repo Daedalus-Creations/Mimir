@@ -1,5 +1,5 @@
 <template>
-<div>
+  <div>
     <v-navigation-drawer
       v-model="showDrawer"
       fixed
@@ -9,59 +9,59 @@
     >
       <v-list subheader dense>
         <v-subheader>Main menu</v-subheader>
-          <v-list-item to="/main/dashboard">
-            <v-list-item-action>
-              <v-icon>web</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Dashboard</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/main/profile/view">
-            <v-list-item-action>
-              <v-icon>person</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/main/profile/edit">
-            <v-list-item-action>
-              <v-icon>edit</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Edit Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/main/profile/password">
-            <v-list-item-action>
-              <v-icon>vpn_key</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Change Password</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
-        <v-list subheader v-show="hasAdminAccess" dense>
-          <v-subheader>Admin</v-subheader>
-          <v-list-item to="/main/admin/users/all">
-            <v-list-item-action>
-              <v-icon>group</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Manage Users</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/main/admin/users/create">
-            <v-list-item-action>
-              <v-icon>person_add</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Create User</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <v-list-item to="/main/dashboard">
+          <v-list-item-action>
+            <v-icon>web</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/main/profile/view">
+          <v-list-item-action>
+            <v-icon>person</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Profile</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/main/profile/edit">
+          <v-list-item-action>
+            <v-icon>edit</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Edit Profile</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/main/profile/password">
+          <v-list-item-action>
+            <v-icon>vpn_key</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Change Password</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list subheader v-show="hasAdminAccess" dense>
+        <v-subheader>Admin</v-subheader>
+        <v-list-item to="/main/admin/users/all">
+          <v-list-item-action>
+            <v-icon>group</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Manage Users</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/main/admin/users/create">
+          <v-list-item-action>
+            <v-icon>person_add</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Create User</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
     <!--
     <v-navigation-drawer
@@ -121,10 +121,10 @@
               <v-list-item-title>Change Password</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          
+
         </v-list>
         <v-list subheader v-show="hasAdminAccess" dense>
-            
+
         <v-divider></v-divider>
           <v-subheader>Admin</v-subheader>
           <v-list-item link to="/main/admin/users/all">
@@ -144,20 +144,11 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-      </v-navigation-drawer>-->
+    </v-navigation-drawer>-->
 
-    
-    <v-app-bar
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
-      app
-      color="blue darken-3"
-      dark
-    >
+    <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-3" dark>
       <v-app-bar-nav-icon @click.stop="switchShowDrawer" />
-      <v-toolbar-title
-        style="width: 300px"
-        class="ml-0 pl-4"
-      >
+      <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
         <span class="hidden-sm-and-down">{{appName}}</span>
       </v-toolbar-title>
       <v-text-field
@@ -168,9 +159,9 @@
         label="Search"
         class="hidden-sm-and-down"
       />
-      <v-spacer/>
+      <v-spacer />
       <v-btn @click="logout">Log Out</v-btn>
-      
+
       <template v-slot:extension>
         <v-tabs align-with-title>
           <v-tab to="/main/dashboard">Dashboard</v-tab>
@@ -178,27 +169,36 @@
           <v-tab to="/main/profile/password">Edit Password</v-tab>
         </v-tabs>
         <v-spacer></v-spacer>
-        <v-btn icon><v-icon>fas fa-filter</v-icon></v-btn>
+        <v-btn icon>
+          <v-icon>fas fa-filter</v-icon>
+        </v-btn>
         <v-spacer></v-spacer>
       </template>
     </v-app-bar>
     <v-content>
       <router-view></router-view>
     </v-content>
-</div>
+  </div>
 </template>
 
 <script lang="ts">
-import {Vue, Component} from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 
-import {appName} from '@/env';
-import {readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess} from '@/store/main/getters';
-import {commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer} from '@/store/main/mutations';
-import {dispatchUserLogOut} from '@/store/main/actions';
+import { appName } from "@/env";
+import {
+  readDashboardMiniDrawer,
+  readDashboardShowDrawer,
+  readHasAdminAccess
+} from "@/store/main/getters";
+import {
+  commitSetDashboardShowDrawer,
+  commitSetDashboardMiniDrawer
+} from "@/store/main/mutations";
+import { dispatchUserLogOut } from "@/store/main/actions";
 
 const routeGuardMain = async (to, from, next) => {
-  if (to.path === '/main') {
-    next('/main/dashboard');
+  if (to.path === "/main") {
+    next("/main/dashboard");
   } else {
     next();
   }
@@ -230,15 +230,15 @@ export default class Main extends Vue {
 
   public switchShowDrawer() {
     commitSetDashboardShowDrawer(
-        this.$store,
-        !readDashboardShowDrawer(this.$store),
+      this.$store,
+      !readDashboardShowDrawer(this.$store)
     );
   }
 
   public switchMiniDrawer() {
     commitSetDashboardMiniDrawer(
-        this.$store,
-        !readDashboardMiniDrawer(this.$store),
+      this.$store,
+      !readDashboardMiniDrawer(this.$store)
     );
   }
 

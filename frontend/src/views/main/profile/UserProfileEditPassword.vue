@@ -12,7 +12,7 @@
             <div class="title primary--text text--darken-2" v-else>{{userProfile.email}}</div>
           </div>
           <v-form ref="form">
-            <v-text-field 
+            <v-text-field
               type="password"
               ref="password"
               label="Password"
@@ -48,11 +48,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { IUserProfileUpdate } from '@/interfaces';
-import { readUserProfile } from '@/store/main/getters';
-import { dispatchUpdateUserProfile } from '@/store/main/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {Store} from 'vuex';
+import {IUserProfileUpdate} from '@/interfaces';
+import {readUserProfile} from '@/store/main/getters';
+import {dispatchUpdateUserProfile} from '@/store/main/actions';
 
 @Component
 export default class UserProfileEdit extends Vue {

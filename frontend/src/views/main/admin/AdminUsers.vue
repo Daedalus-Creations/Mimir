@@ -30,11 +30,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { IUserProfile } from '@/interfaces';
-import { readAdminUsers } from '@/store/admin/getters';
-import { dispatchGetUsers } from '@/store/admin/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {Store} from 'vuex';
+import {IUserProfile} from '@/interfaces';
+import {readAdminUsers} from '@/store/admin/getters';
+import {dispatchGetUsers} from '@/store/admin/actions';
 
 @Component
 export default class AdminUsers extends Vue {

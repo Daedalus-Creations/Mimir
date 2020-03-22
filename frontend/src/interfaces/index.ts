@@ -1,4 +1,4 @@
-export enum type  {
+export enum type {
     UNCATEGORIZED='Uncategorized',
     BOOK='Book',
     FILM='Film',
@@ -8,35 +8,35 @@ export enum type  {
     LYRICS= 'Lyrics',
     OTHER='Other'};
 
-export const typeColor = new Map<string,string>([
-    [type.BOOK,'blue'],
-    [type.FILM,'red'],
-    [type.POEM,'amber'],
-    [type.SPEECH,'green'],
-    [type.WEB,'orange'],
-    [type.LYRICS, 'teal'],
-    [type.OTHER,'indigo'],
-    [type.UNCATEGORIZED,'purple']]);
+export const typeColor = new Map<string, string>([
+  [type.BOOK, 'blue'],
+  [type.FILM, 'red'],
+  [type.POEM, 'amber'],
+  [type.SPEECH, 'green'],
+  [type.WEB, 'orange'],
+  [type.LYRICS, 'teal'],
+  [type.OTHER, 'indigo'],
+  [type.UNCATEGORIZED, 'purple']]);
 
-export const typeIcon = new Map<string,string>([
-    [type.BOOK,'book'],
-    [type.FILM,'film'],
-    [type.POEM,'feather'],
-    [type.SPEECH,'comment'],
-    [type.WEB,'globe-americas'],
-    [type.LYRICS, 'music'],
-    [type.OTHER,'ellipsis-h'],
-    [type.UNCATEGORIZED,'quote-right']]);
+export const typeIcon = new Map<string, string>([
+  [type.BOOK, 'book'],
+  [type.FILM, 'film'],
+  [type.POEM, 'feather'],
+  [type.SPEECH, 'comment'],
+  [type.WEB, 'globe-americas'],
+  [type.LYRICS, 'music'],
+  [type.OTHER, 'ellipsis-h'],
+  [type.UNCATEGORIZED, 'quote-right']]);
 
 export const defaultQuote: IQuoteCreate = {
-        author: '',
-        title: '',
-        type: type.UNCATEGORIZED,
-        text: '',
-        description: '',
-        public: false,
-        color: 'purple',
-        tags: [],
+  author: '',
+  title: '',
+  type: type.UNCATEGORIZED,
+  text: '',
+  description: '',
+  public: false,
+  color: 'purple',
+  tags: [],
 };
 
 export interface IUserProfile {

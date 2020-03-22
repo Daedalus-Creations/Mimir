@@ -1,4 +1,4 @@
-import { IUserProfile ,IQuote, IQuoteCreate} from '@/interfaces';
+import {IUserProfile, IQuote, IQuoteCreate} from '@/interfaces';
 
 export interface AppNotification {
     content: string;

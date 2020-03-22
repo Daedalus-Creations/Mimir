@@ -12,8 +12,12 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="quoteType in type" :key="quoteType" @click="()=>{quote.type = quoteType; quote.color = typeColor(quoteType);}">
-            <v-list-item-action >
+          <v-list-item
+            v-for="quoteType in type"
+            :key="quoteType"
+            @click="()=>{quote.type = quoteType; quote.color = typeColor(quoteType);}"
+          >
+            <v-list-item-action>
               <v-icon :color="typeColor(quoteType)+' darken-2'">fas fa-{{typeIconName(quoteType)}}</v-icon>
             </v-list-item-action>
             <v-list-item-content>{{quoteType}}</v-list-item-content>
@@ -83,56 +87,58 @@ import { commitAddNotification } from "@/store/main/mutations";
 export default class NewQuote extends Vue {
   public quote: IQuoteCreate = Object.assign({}, defaultQuote); // copy defaults to initialize
   public isLoading: boolean = false; // Loading flag
-  @Prop({required:true}) initType!:type;
+  @Prop({ required: true }) initType!: type;
 
-  get type() : type {
-    return type; //get type enum/object
+  get type(): type {
+    return type; // get type enum/object
   }
-  get customColor() : boolean {
+  get customColor(): boolean {
     return Array.from(typeColor.values()).includes(this.quote.color); // check whether a custom color is set
   }
   typeColor(type): string | undefined {
     return typeColor.get(type); // get color name based on type
   }
   typeIconName(type): string | undefined {
-    return typeIcon.get(type); //get icon name based on type enum
+    return typeIcon.get(type); // get icon name based on type enum
   }
 
-  togglePublic() : void {
+  togglePublic(): void {
     this.quote.public = !this.quote.public; // toggle public setting
-    if (this.quote.public)
+    if (this.quote.public) {
       commitAddNotification(this.$store, {
         content: "Warning: This quote will be publicly viewable",
         color: "warning"
-      }); // if public, issue warning
-    else
-        commitAddNotification(this.$store, {
+      });
+    } // if public, issue warning
+    else {
+      commitAddNotification(this.$store, {
         content: "This quote will be private",
         color: "warning"
-      }); // if public, issue warning
+      });
+    } // if public, issue warning
   }
 
   async submit() {
     try {
-      this.isLoading = true; //set loading flag
+      this.isLoading = true; // set loading flag
       await dispatchCreateQuote(this.$store, this.quote); // push quote to server
       commitAddNotification(this.$store, {
         content: "Quote Created",
         color: "success"
-      }); //send notification
+      }); // send notification
     } catch (error) {
       commitAddNotification(this.$store, {
         content: "Something went wrong",
         color: "error"
-      }); //send notification
+      }); // send notification
     } finally {
-      this.isLoading = false; //reset loading flag
-      this.close() // close modal
-      await dispatchLoadQuotes(this.$store); //refresh
+      this.isLoading = false; // reset loading flag
+      this.close(); // close modal
+      await dispatchLoadQuotes(this.$store); // refresh
     }
   }
-  close() : void {
-      this.$emit("close"); //close modal
+  close(): void {
+    this.$emit("close"); // close modal
   }
 
   created() {
