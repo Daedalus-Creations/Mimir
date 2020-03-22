@@ -11,7 +11,7 @@ export enum type  {
 export const typeColor = new Map<string,string>([
     [type.BOOK,'blue'],
     [type.FILM,'red'],
-    [type.POEM,'yellow'],
+    [type.POEM,'amber'],
     [type.SPEECH,'green'],
     [type.WEB,'orange'],
     [type.LYRICS, 'teal'],
@@ -35,7 +35,7 @@ export const defaultQuote: IQuoteCreate = {
         text: '',
         description: '',
         public: false,
-        color: '#2980B9',
+        color: 'purple',
         tags: [],
 };
 

@@ -200,7 +200,7 @@
                 await dispatchLoadQuotes(this.$store); // refresh
             }
             catch(error){
-                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); //send notification
+                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'error' }); //send notification
             }
             finally {
                 this.isLoading = false; //reset loading flag
@@ -228,7 +228,7 @@
                 commitAddNotification(this.$store, { content: 'Quote Deleted', color: 'success' }); // send notification
             }
             catch(error){
-                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'danger' }); // send notification
+                commitAddNotification(this.$store, { content: 'Something went wrong', color: 'error' }); // send notification
             }
             finally {
                 this.isLoading = false; //reset loading flag

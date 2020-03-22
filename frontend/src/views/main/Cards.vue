@@ -45,8 +45,8 @@
                 <v-icon small>fas fa-{{typeIconName(quoteType)}}</v-icon>
             </v-btn>
         </v-speed-dial>
-    <v-dialog v-model="newQuoteOpen" max-width=960>
-        <NewQuote @close="()=>{newQuoteOpen=false}" :initType="newQuoteType"></NewQuote>
+    <v-dialog v-model="newQuoteOpen" persistent max-width=960>
+        <NewQuote @close="()=>{newQuoteOpen=false}" :key="newQuoteKey" :initType="newQuoteType"></NewQuote>
     </v-dialog>
 </div>
 </template>
@@ -68,8 +68,9 @@
 
     export default class Cards extends Vue {
         public fab : boolean = false; //floating button flag
-        public newQuoteOpen : boolean = false;
-        public newQuoteType: type = type.BOOK;
+        public newQuoteOpen : boolean = false; // modal open
+        public newQuoteType: type = type.UNCATEGORIZED;
+        public newQuoteKey: number = 0;
 
         typeIconName(type) : string | undefined {
             return typeIcon.get(type); // get icon name based on type enum
@@ -86,8 +87,10 @@
         }
 
         newQuote(quoteType : type){
-            this.newQuoteType = quoteType; // open modal
+            this.newQuoteKey++; // increment key to reset component
+            this.newQuoteType = quoteType; // set new quote type
             this.newQuoteOpen = true; // set quote type
+
         }
 
         created() {
