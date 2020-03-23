@@ -1,4 +1,4 @@
-import {IUserProfile, IQuote, IQuoteCreate} from '@/interfaces';
+import {IUserProfile, IQuote, IQuoteCreate, defaultQuote} from '@/interfaces';
 import {MainState, AppNotification} from './state';
 import {getStoreAccessors} from 'typesafe-vuex';
 import {State} from '../state';
@@ -35,6 +35,15 @@ export const mutations = {
   setQuote(state: MainState, payload: IQuote) {
     state.quotes[state.quotes.findIndex((quote)=> quote.id === payload.id)] = payload;
   },
+  clearNewQuote(state: MainState){
+    state.newQuote = Object.assign({}, defaultQuote);
+  },
+  setNewQuote(state: MainState, payload: IQuoteCreate) {
+    state.newQuote = payload;
+  },
+  setNewQuoteOpen(state: MainState, payload: boolean){
+    state.newQuoteOpen = payload;
+  }
 };
 
 const {commit} = getStoreAccessors<MainState | any, State>('');
@@ -49,3 +58,6 @@ export const commitAddNotification = commit(mutations.addNotification);
 export const commitRemoveNotification = commit(mutations.removeNotification);
 export const commitSetQuotes = commit(mutations.setQuotes);
 export const commitSetQuote = commit(mutations.setQuote);
+export const commitClearNewQuote = commit(mutations.clearNewQuote);
+export const commitSetNewQuote = commit(mutations.setNewQuote);
+export const commitSetNewQuoteOpen = commit(mutations.setNewQuoteOpen);

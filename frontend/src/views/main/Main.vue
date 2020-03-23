@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer
+    <!--<v-navigation-drawer
       v-model="showDrawer"
       fixed
       width="25%"
@@ -62,90 +62,78 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
-    <!--
-    <v-navigation-drawer
-        v-model="showDrawer"
-        color="blue darken-3"
-        temporary
-        fixed
-        dark
-      >
-        <v-list
-          dense
-          nav
-          class="py-0"
-        >
-          <v-list-item two-line>
-            <v-list-item-avatar>
-              <img src="https://randomuser.me/api/portraits/men/81.jpg">
-            </v-list-item-avatar>
+    </v-navigation-drawer>-->
+<v-card class="overflow-hidden">
+    <v-navigation-drawer v-model="showDrawer" color="blue darken-3" temporary fixed dark>
+      <v-list dense nav class="py-0">
+        <v-list-item two-line>
+          <v-list-item-avatar>
+            <img src="https://randomuser.me/api/portraits/men/81.jpg" />
+          </v-list-item-avatar>
 
-            <v-list-item-content>
-              <v-list-item-title>Application</v-list-item-title>
-              <v-list-item-subtitle>Subtext</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
-          <v-list-item link to="/main/dashboard">
-            <v-list-item-action>
-              <v-icon>web</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Dashboard</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item link to="/main/profile/view">
-            <v-list-item-action>
-              <v-icon>person</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item link to="/main/profile/edit">
-            <v-list-item-action>
-              <v-icon>edit</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Edit Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item link to="/main/profile/password">
-            <v-list-item-action>
-              <v-icon>vpn_key</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Change Password</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-        </v-list>
-        <v-list subheader v-show="hasAdminAccess" dense>
+          <v-list-item-content>
+            <v-list-item-title>Application</v-list-item-title>
+            <v-list-item-subtitle>Subtext</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
 
         <v-divider></v-divider>
-          <v-subheader>Admin</v-subheader>
-          <v-list-item link to="/main/admin/users/all">
-            <v-list-item-action>
-              <v-icon>group</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Manage Users</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item link to="/main/admin/users/create">
-            <v-list-item-action>
-              <v-icon>person_add</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Create User</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-    </v-navigation-drawer>-->
 
+        <v-list-item link to="/main/dashboard">
+          <v-list-item-action>
+            <v-icon>web</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/main/profile/view">
+          <v-list-item-action>
+            <v-icon>person</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Profile</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/main/profile/edit">
+          <v-list-item-action>
+            <v-icon>edit</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Edit Profile</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/main/profile/password">
+          <v-list-item-action>
+            <v-icon>vpn_key</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Change Password</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-list subheader v-show="hasAdminAccess" dense>
+        <v-divider></v-divider>
+        <v-subheader>Admin</v-subheader>
+        <v-list-item link to="/main/admin/users/all">
+          <v-list-item-action>
+            <v-icon>group</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Manage Users</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/main/admin/users/create">
+          <v-list-item-action>
+            <v-icon>person_add</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Create User</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+</v-card>
     <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-3" dark>
       <v-app-bar-nav-icon @click.stop="switchShowDrawer" />
       <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
@@ -156,7 +144,7 @@
         solo-inverted
         hide-details
         prepend-inner-icon="search"
-        label="Search"
+        label="Search quotes"
         class="hidden-sm-and-down"
       />
       <v-spacer />
@@ -164,11 +152,23 @@
 
       <template v-slot:extension>
         <v-tabs align-with-title>
-          <v-tab to="/main/dashboard">Dashboard</v-tab>
-          <v-tab to="/main/profile/edit">Edit Profile</v-tab>
-          <v-tab to="/main/profile/password">Edit Password</v-tab>
+          <v-tab to="/main/dashboard">Your Quotes</v-tab>
+          <v-tab to="#">Vocab List</v-tab>
+          <v-tab to='#'>Browse</v-tab>
+          <v-tab to='#'>Settings</v-tab>
         </v-tabs>
         <v-spacer></v-spacer>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn text v-on="on">Sort</v-btn>
+          </template>
+          <v-list>
+            <v-list-item link><v-list-item-title>By Author</v-list-item-title></v-list-item>
+            <v-list-item link><v-list-item-title>By Title</v-list-item-title></v-list-item>
+            <v-list-item link><v-list-item-title>By Type</v-list-item-title></v-list-item>
+            <v-list-item link><v-list-item-title>By Tag</v-list-item-title></v-list-item>
+          </v-list>
+        </v-menu>
         <v-btn icon>
           <v-icon>fas fa-filter</v-icon>
         </v-btn>

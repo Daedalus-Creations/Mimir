@@ -11,7 +11,7 @@ export enum type {
 export const typeColor = new Map<string, string>([
   [type.BOOK, 'blue'],
   [type.FILM, 'red'],
-  [type.POEM, 'amber'],
+  [type.POEM, 'pink'],
   [type.SPEECH, 'green'],
   [type.WEB, 'orange'],
   [type.LYRICS, 'teal'],

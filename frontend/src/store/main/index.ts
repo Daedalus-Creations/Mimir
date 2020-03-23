@@ -2,6 +2,7 @@ import {mutations} from './mutations';
 import {getters} from './getters';
 import {actions} from './actions';
 import {MainState} from './state';
+import { defaultQuote } from '@/interfaces';
 
 const defaultState: MainState = {
   isLoggedIn: null,
@@ -9,9 +10,11 @@ const defaultState: MainState = {
   logInError: false,
   userProfile: null,
   dashboardMiniDrawer: false,
-  dashboardShowDrawer: true,
+  dashboardShowDrawer: false,
   notifications: [],
   quotes: [],
+  newQuote: Object.assign({}, defaultQuote),
+  newQuoteOpen: false,
 };
 
 export const mainModule = {

@@ -1,9 +1,9 @@
 <template>
-  <v-card :loading="isLoading" :color="quote.color+' lighten-1'" dark>
+  <v-card :loading="isLoading" :color="quote.color" dark>
     <template v-slot:progress>
       <v-progress-linear absolute color="green lighten-3" height="4" indeterminate></v-progress-linear>
     </template>
-    <v-card-title :class="'headline '+quote.color+' darken-1'">
+    <v-card-title :class="'headline '+quote.color+' darken-2'">
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn text v-on="on">
@@ -30,15 +30,13 @@
         <v-icon v-if="quote.public">fas fa-unlock</v-icon>
         <v-icon v-else>fas fa-lock</v-icon>
       </v-btn>
-      <swatches v-model="quote.color" shapes="circles" show-fallback popover-to="left">
-        <v-btn text slot="trigger">Custom Color</v-btn>
-      </swatches>
+      <v-btn text>Custom Color</v-btn>
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="pb-0">
       <v-form>
-        <v-container class="fill-height">
+        <v-container class="pb-0">
           <v-row>
-            <v-col>
+            <v-col >
               <v-text-field v-model="quote.title" label="Title"></v-text-field>
             </v-col>
             <v-col>
@@ -51,8 +49,8 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
-              <v-textarea label="Tags" filled rounded rows="1" :auto-grow="true" />
+            <v-col class="py-0">
+              <v-textarea label="Tags" filled rounded dense rows="1" :auto-grow="true" />
             </v-col>
           </v-row>
         </v-container>
@@ -77,7 +75,8 @@ import {
 import { dispatchCreateQuote, dispatchLoadQuotes } from "@/store/main/actions";
 import Swatches from "vue-swatches";
 import "vue-swatches/dist/vue-swatches.min.css";
-import { commitAddNotification } from "@/store/main/mutations";
+import { commitAddNotification, commitSetNewQuote, commitSetNewQuoteOpen } from "@/store/main/mutations";
+import { readNewQuote, readNewQuoteOpen } from "../store/main/getters";
 
 @Component({
   components: {
@@ -85,9 +84,20 @@ import { commitAddNotification } from "@/store/main/mutations";
   }
 })
 export default class NewQuote extends Vue {
-  public quote: IQuoteCreate = Object.assign({}, defaultQuote); // copy defaults to initialize
   public isLoading: boolean = false; // Loading flag
-  @Prop({ required: true }) initType!: type;
+
+  get quote() : IQuoteCreate {
+    return readNewQuote(this.$store);
+  }
+  set quote(payload: IQuoteCreate) {
+    commitSetNewQuote(this.$store, payload);
+  }
+  get newQuoteOpen(): boolean {
+    return readNewQuoteOpen(this.$store);
+  }
+  set newQuoteOpen(payload: boolean){
+    commitSetNewQuoteOpen(this.$store, payload);
+  }
 
   get type(): type {
     return type; // get type enum/object
@@ -101,7 +111,6 @@ export default class NewQuote extends Vue {
   typeIconName(type): string | undefined {
     return typeIcon.get(type); // get icon name based on type enum
   }
-
   togglePublic(): void {
     this.quote.public = !this.quote.public; // toggle public setting
     if (this.quote.public) {
@@ -138,12 +147,8 @@ export default class NewQuote extends Vue {
     }
   }
   close(): void {
-    this.$emit("close"); // close modal
+    this.newQuoteOpen = false;
   }
 
-  created() {
-    this.quote.type = this.initType;
-    this.quote.color = this.typeColor(this.initType);
-  }
 }
 </script>

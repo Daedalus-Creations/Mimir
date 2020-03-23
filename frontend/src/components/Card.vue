@@ -1,5 +1,5 @@
 <template>
-  <div class="notification" :style="colorStyle">
+  <div class="notification" :style="colorStyle" style="width:100%">
     <b-loading :active.sync="isLoading" :is-full-page="false" :can-cancel="true"></b-loading>
     <div class="level is-mobile">
       <div class="level-left">
@@ -127,7 +127,32 @@
         </div>
       </div>
     </b-collapse>
-  </div>
+  </div><!--
+  <v-card :loading="isLoading" :color="quote.color" width="100%" dark>
+    <v-card-title :class="'heading '+quote.color+' darken-2'">
+        <v-icon left>fas fa-{{typeIconName(quote.type)}}</v-icon>
+        {{quote.title}}
+        <v-spacer></v-spacer>
+        <v-btn color="error" @click="confirmDelete">Delete</v-btn>
+    </v-card-title>
+    <v-card-text class="px-10">
+      {{quote.text}}
+    </v-card-text>
+    <v-card-actions>
+      <v-list-item>
+        <v-list-item-avatar small>
+          <v-icon small>fas fa-user</v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content class="subheading">
+          {{quote.author}}
+        </v-list-item-content>
+      </v-list-item>
+      <v-text-field prepend-inner-icon="tag" dense rounded filled label="Tags"></v-text-field>
+      
+        <v-spacer></v-spacer>
+        <v-btn icon><v-icon small>fas fa-sticky-note</v-icon></v-btn>
+    </v-card-actions>
+  </v-card>-->
 </template>
 
 <script lang="ts">

@@ -15,4 +15,6 @@ export interface MainState {
     dashboardShowDrawer: boolean;
     notifications: AppNotification[];
     quotes: IQuote[];
+    newQuote: IQuoteCreate;
+    newQuoteOpen: boolean;
 }

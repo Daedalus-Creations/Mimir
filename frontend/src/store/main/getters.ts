@@ -16,6 +16,8 @@ export const getters = {
   isLoggedIn: (state: MainState) => state.isLoggedIn,
   firstNotification: (state: MainState) => state.notifications.length > 0 && state.notifications[0],
   quotes: (state: MainState) => state.quotes,
+  newQuote: (state: MainState) => state.newQuote,
+  newQuoteOpen: (state: MainState) => state.newQuoteOpen,
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -29,3 +31,5 @@ export const readToken = read(getters.token);
 export const readUserProfile = read(getters.userProfile);
 export const readFirstNotification = read(getters.firstNotification);
 export const readQuotes = read(getters.quotes);
+export const readNewQuote = read(getters.newQuote);
+export const readNewQuoteOpen = read(getters.newQuoteOpen);
