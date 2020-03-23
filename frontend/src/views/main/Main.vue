@@ -155,7 +155,7 @@
           <v-tab to="/main/dashboard">Your Quotes</v-tab>
           <v-tab to="#">Vocab List</v-tab>
           <v-tab to='#'>Browse</v-tab>
-          <v-tab to='#'>Settings</v-tab>
+          <v-tab to='/main/profile'>Settings</v-tab>
         </v-tabs>
         <v-spacer></v-spacer>
         <v-menu offset-y>

@@ -1,158 +1,39 @@
 <template>
-  <div class="notification" :style="colorStyle" style="width:100%">
-    <b-loading :active.sync="isLoading" :is-full-page="false" :can-cancel="true"></b-loading>
-    <div class="level is-mobile">
-      <div class="level-left">
-        <div class="level-item">
-          <h1 class="title is-5">
-            <b-icon :icon="typeIconName(quote.type)"></b-icon>
-          </h1>
-        </div>
-        <div class="level-item">
-          <input
-            class="nostyle title is-5"
-            :disabled="!editable"
-            :spellcheck="editable"
-            :class="editable ? 'editable' : ''"
-            placeholder="Book Title"
-            v-model="quote.title"
-          />
-        </div>
-      </div>
-      <div class="level-right">
-        <div class="level-item" v-if="editable">
-          <b-dropdown aria-role="list" v-model="quote.type">
-            <b-button inverted rounded outlined size="is-small" type="is-info" slot="trigger">Type</b-button>
-            <b-dropdown-item
-              v-for="quoteType in type"
-              :key="quoteType"
-              :value="quoteType"
-              aria-role="listitem"
-            >
-              <div class="media">
-                <div class="media-left">
-                  <b-icon :icon="typeIconName(quoteType)"></b-icon>
-                </div>
-                <div class="media-content">
-                  <h3>{{quoteType}}</h3>
-                </div>
-              </div>
-            </b-dropdown-item>
-          </b-dropdown>
-        </div>
-        <div class="level-item" v-if="editable">
-          <swatches v-model="quote.color" shapes="circles" show-fallback popover-to="left">
-            <b-button slot="trigger" type="is-info" size="is-small" rounded inverted outlined>color</b-button>
-          </swatches>
-        </div>
-        <div class="level-item">
-          <div class="level-item">
-            <div class="buttons">
-              <b-button
-                v-if="editable"
-                type="is-danger"
-                size="is-small"
-                @click="confirmDelete"
-                rounded
-              >
-                <b-icon icon="trash"></b-icon>
-              </b-button>
-              <b-button
-                v-if="editable"
-                type="is-success"
-                size="is-small"
-                rounded
-                @click="updateQuote"
-              >
-                <b-icon icon="check"></b-icon>
-              </b-button>
-              <b-button
-                v-if="!editable"
-                type="is-info"
-                size="is-small"
-                outlined
-                rounded
-                inverted
-                @click="editable = true"
-              >
-                <b-icon icon="edit" pack="far"></b-icon>
-              </b-button>
-
-              <b-button
-                v-if="!editable"
-                type="is-info"
-                size="is-small"
-                outlined
-                rounded
-                inverted
-                slot="trigger"
-                aria-controls="collapsable"
-                @click="isOpen = !isOpen"
-              >
-                <b-icon :icon="isOpen ? 'compress' : 'expand'"></b-icon>
-              </b-button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <textarea
-        placeholder="Quote"
-        class="nostyle autosize subtitle is-6"
-        :disabled="!editable"
-        :spellcheck="editable"
-        :class="editable ? 'editable' : ''"
-        v-model="quote.text"
-      ></textarea>
-    </div>
-    <b-collapse :open.sync="isOpen" aria-id="collapsable">
-      <div class="level is-mobile">
-        <div class="level-left">
-          <div class="level-item">
-            <h1 class="title is-6">
-              <b-icon icon="user"></b-icon>
-            </h1>
-          </div>
-          <div class="level-item">
-            <input
-              class="nostyle title is-6"
-              :disabled="!editable"
-              :spellcheck="editable"
-              :class="editable ? 'editable' : ''"
-              placeholder="Author"
-              v-model="quote.author"
-            />
-          </div>
-        </div>
-      </div>
-    </b-collapse>
-  </div><!--
   <v-card :loading="isLoading" :color="quote.color" width="100%" dark>
-    <v-card-title :class="'heading '+quote.color+' darken-2'">
+    <v-card-title :class="'title white--text '+quote.color+' darken-2'">
         <v-icon left>fas fa-{{typeIconName(quote.type)}}</v-icon>
-        {{quote.title}}
+        <span v-if="!editable">{{quote.title}}</span>
+        <v-text-field dense v-model="quote.title" placeholder="Title" v-else />
         <v-spacer></v-spacer>
-        <v-btn color="error" @click="confirmDelete">Delete</v-btn>
+         <v-btn small v-if="editable" @click="togglePublic" icon>
+        <v-icon small v-if="quote.public">fas fa-unlock</v-icon>
+        <v-icon small v-else>fas fa-lock</v-icon>
+      </v-btn>
+      <v-btn small v-if="editable" text class="mr-2">Custom Color</v-btn>
+        <v-btn v-if="editable" color="error" small @click="confirmDelete" class="mr-4">Delete</v-btn>
+        <v-btn v-if="editable" color="success" small @click="updateQuote">Save</v-btn>
+        <v-btn icon v-if="!editable" @click="editable=true" small class="my-0">
+            <v-icon>edit</v-icon>
+        </v-btn>
     </v-card-title>
-    <v-card-text class="px-10">
-      {{quote.text}}
+    <v-card-text class="px-9 py-0">
+      <span v-if="!editable">{{quote.text}}</span>
+      <v-textarea dense rows="1" class="my=0" v-model="quote.text" :auto-grow="true" placeholder="Quote" v-else />
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions class="pb-0">
       <v-list-item>
         <v-list-item-avatar small>
           <v-icon small>fas fa-user</v-icon>
         </v-list-item-avatar>
         <v-list-item-content class="subheading">
-          {{quote.author}}
+          <span v-if="!editable">{{quote.author}}</span>
+          <v-text-field dense class="my-0" v-model="quote.author" placeholder="Author" v-else />
         </v-list-item-content>
       </v-list-item>
-      <v-text-field prepend-inner-icon="tag" dense rounded filled label="Tags"></v-text-field>
-      
         <v-spacer></v-spacer>
         <v-btn icon><v-icon small>fas fa-sticky-note</v-icon></v-btn>
     </v-card-actions>
-  </v-card>-->
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -180,12 +61,12 @@ export default class Card extends Vue {
 
   @Prop({ required: true }) id!: number;
 
-  get quote() {
+  get quote(): IQuote {
     // find quote with specified id number
     return readQuotes(this.$store).find(quote => quote.id === this.id);
   }
 
-  set quote(newquote) {
+  set quote(newquote: IQuote) {
     if (newquote) {
       commitSetQuote(this.$store, newquote);
     }
@@ -217,6 +98,21 @@ export default class Card extends Vue {
         "--button-color": textColor
       };
     }
+  }
+  togglePublic(): void {
+    this.quote.public = !this.quote.public; // toggle public setting
+    if (this.quote.public) {
+      commitAddNotification(this.$store, {
+        content: "Warning: This quote will be publicly viewable",
+        color: "warning"
+      });
+    } // if public, issue warning
+    else {
+      commitAddNotification(this.$store, {
+        content: "This quote will be private",
+        color: "warning"
+      });
+    } // if public, issue warning
   }
 
   async updateQuote() {
@@ -282,45 +178,19 @@ export default class Card extends Vue {
 }
 </script>
 <style scoped>
-:root {
-  --placeholder-color: #fff;
-  --accent-color: #000;
-  --button-color: #fff;
+/deep/ .v-card__text * {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
 }
-/deep/ ::placeholder {
-  color: var(--placeholder-color);
+/deep/ .v-messages  {
+    min-height: 0px;
+    height: 0px;
 }
-/*
-    /deep/ button{
-      border-color: var(--button-color) !important;
-      color: var(--button-color) ;
-      background: var(--button-color) !important;
-    }*/
-/deep/ .ti-input {
-  border: None;
-}
-/deep/ .ti-new-tag-input {
-  background: transparent;
-  color: var(--accent-color);
-}
-.nostyle {
-  width: 100%;
-  outline: None;
-  border: None;
-  overflow: hidden;
-  background-color: transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  resize: none;
-}
-.editable {
-  box-shadow: 0 -2px inset var(--placeholder-color); /*#1e1e1f;*/
-}
-.editable:focus {
-  box-shadow: 0 -2px inset var(--accent-color);
-}
-.editable:focus-within {
-  box-shadow: 0 -2px inset var(--accent-color);
+/deep/ .v-text-field__details {
+    min-height: 0px;
+    height: 0px;
 }
 </style>
