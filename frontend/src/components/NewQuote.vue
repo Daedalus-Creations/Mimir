@@ -103,7 +103,7 @@ export default class NewQuote extends Vue {
     return type; // get type enum/object
   }
   get customColor(): boolean {
-    return Array.from(typeColor.values()).includes(this.quote.color); // check whether a custom color is set
+    return !Array.from(typeColor.values()).includes(this.quote.color); // check whether a custom color is set
   }
   typeColor(type): string | undefined {
     return typeColor.get(type); // get color name based on type

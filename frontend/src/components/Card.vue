@@ -1,26 +1,41 @@
 <template>
   <v-card :loading="isLoading" :color="quote.color" width="100%" dark>
-    <v-card-title :class="'title white--text '+quote.color+' darken-2'">
-        <v-icon left>fas fa-{{typeIconName(quote.type)}}</v-icon>
-        <span v-if="!editable">{{quote.title}}</span>
-        <v-text-field dense v-model="quote.title" placeholder="Title" v-else />
-        <v-spacer></v-spacer>
-         <v-btn small v-if="editable" @click="togglePublic" icon>
+    <v-card-title :class="'title white--text '+headerColor">
+
+      <v-icon left>fas fa-{{typeIconName(quote.type)}}</v-icon>
+
+      <span v-if="!editable">{{quote.title}}</span>
+      <v-text-field dense v-model="quote.title" placeholder="Title" v-else />
+
+      <v-spacer></v-spacer>
+
+      <v-btn small v-if="editable" @click="togglePublic" icon>
         <v-icon small v-if="quote.public">fas fa-unlock</v-icon>
         <v-icon small v-else>fas fa-lock</v-icon>
       </v-btn>
+
       <v-btn small v-if="editable" text class="mr-2">Custom Color</v-btn>
-        <v-btn v-if="editable" color="error" small @click="confirmDelete" class="mr-4">Delete</v-btn>
-        <v-btn v-if="editable" color="success" small @click="updateQuote">Save</v-btn>
-        <v-btn icon v-if="!editable" @click="editable=true" small class="my-0">
-            <v-icon>edit</v-icon>
-        </v-btn>
+      <v-btn v-if="editable" color="error" small class="mr-4" @click.stop="confirmDelete=true">Delete</v-btn>
+      <v-btn v-if="editable" color="success" small @click="updateQuote">Save</v-btn>
+      <v-btn icon v-if="!editable" @click="editable=true" small class="my-0"> <v-icon>edit</v-icon></v-btn>
+
     </v-card-title>
     <v-card-text class="px-9 py-0">
+
       <span v-if="!editable">{{quote.text}}</span>
-      <v-textarea dense rows="1" class="my=0" v-model="quote.text" :auto-grow="true" placeholder="Quote" v-else />
+      <v-textarea
+        dense
+        rows="1"
+        class="my=0"
+        v-model="quote.text"
+        :auto-grow="true"
+        placeholder="Quote"
+        v-else
+      />
+
     </v-card-text>
     <v-card-actions class="pb-0">
+
       <v-list-item>
         <v-list-item-avatar small>
           <v-icon small>fas fa-user</v-icon>
@@ -30,9 +45,47 @@
           <v-text-field dense class="my-0" v-model="quote.author" placeholder="Author" v-else />
         </v-list-item-content>
       </v-list-item>
-        <v-spacer></v-spacer>
-        <v-btn icon><v-icon small>fas fa-sticky-note</v-icon></v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn icon><v-icon small>fas fa-sticky-note</v-icon></v-btn>
+
     </v-card-actions>
+
+    <v-dialog
+      v-model="confirmDelete"
+      width="500"
+    >
+
+      <v-card color="error" dark>
+        <v-card-title
+          class="title white--text error darken-1"
+          primary-title
+        >
+          Delete Quote
+        </v-card-title>
+
+        <v-card-text>
+          Are you sure you want to delete this quote?
+          </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            @click="deleteQuote"
+          >
+            Delete
+          </v-btn>
+          <v-btn
+            text
+            @click="confirmDelete = false"
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -40,24 +93,18 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { readQuotes } from "@/store/main/getters.ts";
 import { commitAddNotification, commitSetQuote } from "@/store/main/mutations";
-import { IQuote, type, typeIcon } from "@/interfaces";
-import {
-  dispatchDeleteQuote,
-  dispatchLoadQuotes,
-  dispatchUpdateQuote
-} from "@/store/main/actions";
-import Swatches from "vue-swatches";
+import { IQuote, type, typeIcon, typeColor } from "@/interfaces";
+import { dispatchDeleteQuote, dispatchLoadQuotes, dispatchUpdateQuote } from "@/store/main/actions";
 const tinycolor = require("tinycolor2");
 
 @Component({
   components: {
-    Swatches
   }
 })
 export default class Card extends Vue {
-  public isOpen = true;
   public editable = false;
   public isLoading = false;
+  public confirmDelete = false;
 
   @Prop({ required: true }) id!: number;
 
@@ -65,7 +112,6 @@ export default class Card extends Vue {
     // find quote with specified id number
     return readQuotes(this.$store).find(quote => quote.id === this.id);
   }
-
   set quote(newquote: IQuote) {
     if (newquote) {
       commitSetQuote(this.$store, newquote);
@@ -77,27 +123,13 @@ export default class Card extends Vue {
   get type() {
     return type; // get type enum/object
   }
-  get colorStyle() {
-    if (this.quote) {
-      const background = tinycolor(this.quote.color); // get background color
-      const textColor = background.isLight() ? "#000" : "#fff"; // invert to get text color
-      const outline = background.isLight()
-        ? tinycolor(this.quote.color)
-            .darken()
-            .toHexString()
-        : tinycolor(this.quote.color)
-            .brighten()
-            .toHexString(); // lighten or darken background color to get outline/placeholder color
-
-      const accent = textColor;
-      return {
-        background: background.toHexString(),
-        color: textColor,
-        "--placeholder-color": outline,
-        "--accent-color": accent,
-        "--button-color": textColor
-      };
-    }
+  get headerColor(){
+        if(Array.from(typeColor.values()).includes(this.quote.color)) // if quote color is not a custom color
+            return this.quote.color+' darken-2'; // use vuetify presets
+        else {
+            let color = tinycolor(this.quote.color);
+            return color.darken(10).toString(); // compute with tinycolor
+        }
   }
   togglePublic(): void {
     this.quote.public = !this.quote.public; // toggle public setting
@@ -114,7 +146,6 @@ export default class Card extends Vue {
       });
     } // if public, issue warning
   }
-
   async updateQuote() {
     try {
       this.isLoading = true; // set loading flag
@@ -129,7 +160,7 @@ export default class Card extends Vue {
         content: "Changes saved",
         color: "success"
       }); // send notification
-      await dispatchLoadQuotes(this.$store); // refresh
+      this.editable = false;
     } catch (error) {
       commitAddNotification(this.$store, {
         content: "Something went wrong",
@@ -137,23 +168,11 @@ export default class Card extends Vue {
       }); // send notification
     } finally {
       this.isLoading = false; // reset loading flag
-      this.editable = false;
     }
-  }
-  confirmDelete() {
-    this.$buefy.dialog.confirm({
-      title: "Deleting Quote",
-      message:
-        "Are you sure you want to <b>delete</b> this quote? This action cannot be undone.",
-      confirmText: "Delete Quote",
-      type: "is-danger",
-      icon: "exclamation-circle",
-      hasIcon: true,
-      onConfirm: this.deleteQuote
-    });
   }
   async deleteQuote() {
     try {
+      this.confirmDelete = false; // reset modal flag
       this.isLoading = true; // set loading flag
       if (this.quote) {
         await dispatchDeleteQuote(this.$store, this.quote.id);
@@ -165,6 +184,7 @@ export default class Card extends Vue {
         content: "Quote Deleted",
         color: "success"
       }); // send notification
+      await dispatchLoadQuotes(this.$store); // refresh
     } catch (error) {
       commitAddNotification(this.$store, {
         content: "Something went wrong",
@@ -172,25 +192,25 @@ export default class Card extends Vue {
       }); // send notification
     } finally {
       this.isLoading = false; // reset loading flag
-      await dispatchLoadQuotes(this.$store); // refresh
     }
   }
 }
 </script>
+
 <style scoped>
 /deep/ .v-card__text * {
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    letter-spacing: inherit;
-    color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
 }
-/deep/ .v-messages  {
-    min-height: 0px;
-    height: 0px;
+/deep/ .v-messages {
+  min-height: 0px;
+  height: 0px;
 }
 /deep/ .v-text-field__details {
-    min-height: 0px;
-    height: 0px;
+  min-height: 0px;
+  height: 0px;
 }
 </style>
