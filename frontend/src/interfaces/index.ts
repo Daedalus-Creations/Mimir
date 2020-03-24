@@ -35,7 +35,7 @@ export const defaultQuote: IQuoteCreate = {
   text: '',
   description: '',
   public: false,
-  color: 'purple',
+  color: null,
   tags: [],
 };
 
@@ -70,7 +70,7 @@ type: string;
 text: string;
 description?: string;
 public?: boolean;
-color?: string;
+color?: string | null;
 tags?: Array<ITag>;
 id: number;
 owner_id: number;
@@ -83,7 +83,7 @@ type?: string;
 text?: string;
 description?: string;
 public?: boolean;
-color?: string;
+color?: string | null;
 tags?: Array<ITag>;
 }
 
@@ -94,7 +94,7 @@ type: string;
 text: string;
 description?: string;
 public?: boolean;
-color?: string;
+color?: string | null;
 tags?: Array<ITag>;
 }
 

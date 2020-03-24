@@ -1,9 +1,9 @@
 <template>
-  <v-card :loading="isLoading" :color="quote.color" dark>
+  <v-card :loading="isLoading" :color="this.color" dark>
     <template v-slot:progress>
       <v-progress-linear absolute color="green lighten-3" height="4" indeterminate></v-progress-linear>
     </template>
-    <v-card-title :class="'headline '+quote.color+' darken-2'">
+    <v-card-title :class="'headline '+this.color+' darken-2'">
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn text v-on="on">
@@ -15,7 +15,7 @@
           <v-list-item
             v-for="quoteType in type"
             :key="quoteType"
-            @click="()=>{quote.type = quoteType; quote.color = typeColor(quoteType);}"
+            @click="quote.type = quoteType"
           >
             <v-list-item-action>
               <v-icon :color="typeColor(quoteType)+' darken-2'">fas fa-{{typeIconName(quoteType)}}</v-icon>
@@ -102,10 +102,13 @@ export default class NewQuote extends Vue {
   get type(): type {
     return type; // get type enum/object
   }
-  get customColor(): boolean {
-    return !Array.from(typeColor.values()).includes(this.quote.color); // check whether a custom color is set
+  get color(): string {
+    if(this.quote.color === null) // if no color set
+      return this.typeColor(this.quote.type); // set color based on type
+    else
+      return this.quote.color; // use custom color if set
   }
-  typeColor(type): string | undefined {
+  typeColor(type: type): string | undefined {
     return typeColor.get(type); // get color name based on type
   }
   typeIconName(type): string | undefined {

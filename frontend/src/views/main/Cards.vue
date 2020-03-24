@@ -145,7 +145,6 @@ export default class Cards extends Vue {
   createQuote(quoteType: type) {
     commitClearNewQuote(this.$store); // reset defaults
     this.newQuote.type = quoteType; // set type
-    this.newQuote.color = this.typeColor(quoteType) // set color
     this.newQuoteOpen = true; // open modal
   }
 

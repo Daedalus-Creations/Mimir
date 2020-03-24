@@ -1,6 +1,6 @@
 <template>
-  <v-card :loading="isLoading" :color="quote.color" width="100%" dark>
-    <v-card-title :class="'title white--text '+headerColor">
+  <v-card :loading="isLoading" :color="color" width="100%" dark>
+    <v-card-title :class="'title white--text mb-3 py-3 '+color+' darken-2'">
 
       <v-icon left>fas fa-{{typeIconName(quote.type)}}</v-icon>
 
@@ -14,13 +14,24 @@
         <v-icon small v-else>fas fa-lock</v-icon>
       </v-btn>
 
-      <v-btn small v-if="editable" text class="mr-2">Custom Color</v-btn>
-      <v-btn v-if="editable" color="error" small class="mr-4" @click.stop="confirmDelete=true">Delete</v-btn>
+      
+    <v-menu offset-y v-if="editable" :close-on-content-click="false">
+		<template v-slot:activator="{ on }">
+			<v-btn small  text class="mr-2" v-on="on">Custom Color</v-btn>
+		</template>
+		<v-card>
+			<v-card-text class="pa-0">
+				<v-color-picker v-model="quote.color" class="no-alpha" flat hide-mode-switch />
+			</v-card-text>
+		</v-card>
+	</v-menu>
+
+      <v-btn v-if="editable" color="error" small class="mr-3" @click.stop="confirmDelete=true">Delete</v-btn>
       <v-btn v-if="editable" color="success" small @click="updateQuote">Save</v-btn>
       <v-btn icon v-if="!editable" @click="editable=true" small class="my-0"> <v-icon>edit</v-icon></v-btn>
 
     </v-card-title>
-    <v-card-text class="px-9 py-0">
+    <v-card-text class="px-8 py-0">
 
       <span v-if="!editable">{{quote.text}}</span>
       <v-textarea
@@ -34,9 +45,9 @@
       />
 
     </v-card-text>
-    <v-card-actions class="pb-0">
-
-      <v-list-item>
+    <v-card-actions class="py-0">
+        
+      <v-list-item dense>
         <v-list-item-avatar small>
           <v-icon small>fas fa-user</v-icon>
         </v-list-item-avatar>
@@ -123,13 +134,11 @@ export default class Card extends Vue {
   get type() {
     return type; // get type enum/object
   }
-  get headerColor(){
-        if(Array.from(typeColor.values()).includes(this.quote.color)) // if quote color is not a custom color
-            return this.quote.color+' darken-2'; // use vuetify presets
-        else {
-            let color = tinycolor(this.quote.color);
-            return color.darken(10).toString(); // compute with tinycolor
-        }
+  get color(): string {
+    if(this.quote.color === null) // if no color set
+      return typeColor.get(this.quote.type); // set color based on type
+    else
+      return this.quote.color; // use custom color if set
   }
   togglePublic(): void {
     this.quote.public = !this.quote.public; // toggle public setting
@@ -212,5 +221,11 @@ export default class Card extends Vue {
 /deep/ .v-text-field__details {
   min-height: 0px;
   height: 0px;
+}
+/deep/ .no-alpha .v-color-picker__controls .v-color-picker__preview .v-color-picker__sliders .v-color-picker__alpha {
+        display: none;
+}
+/deep/ .no-alpha .v-color-picker__controls .v-color-picker__edit .v-color-picker__input:last-child {
+        display: none;
 }
 </style>
