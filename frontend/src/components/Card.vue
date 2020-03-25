@@ -1,6 +1,6 @@
 <template>
   <v-card :loading="isLoading" :color="color" width="100%" dark>
-    <v-card-title :class="'title white--text mb-3 py-3 '+color+' darken-2'">
+    <v-card-title :class="'title white--text mb-4 py-3 '+color+' darken-2'">
 
       <v-icon left>fas fa-{{typeIconName(quote.type)}}</v-icon>
 
@@ -37,16 +37,19 @@
       <v-textarea
         dense
         rows="1"
-        class="my=0"
+        class="my-0"
         v-model="quote.text"
         :auto-grow="true"
         placeholder="Quote"
         v-else
       />
 
+        
+    </v-card-text>
+    <v-card-text class="py-0 px-8"> 
+        <v-chip-group class="white--text" column><v-chip small color="blue darken-1">tag</v-chip><v-chip small color="red darken-1">tag</v-chip><v-chip small color="amber darken-1">tag</v-chip></v-chip-group>
     </v-card-text>
     <v-card-actions class="py-0">
-        
       <v-list-item dense>
         <v-list-item-avatar small>
           <v-icon small>fas fa-user</v-icon>
