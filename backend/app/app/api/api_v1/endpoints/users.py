@@ -10,7 +10,7 @@ from app.api.utils.db import get_db
 from app.api.utils.security import get_current_active_superuser, get_current_active_user
 from app.core import config
 from app.models.user import User as DBUser
-from app.schemas.user import User, UserCreate, UserUpdate
+from app.schemas.user import User, UserCreate, UserUpdate, OpenUserCreate, OpenUserUpdate
 from app.utils import send_new_account_email
 
 router = APIRouter()
@@ -44,12 +44,12 @@ def create_user(
     if user:
         raise HTTPException(
             status_code=400,
-            detail="The user with this username already exists in the system.",
+            detail="The user with this full_name already exists in the system.",
         )
     user = crud.user.create(db, obj_in=user_in)
     if config.EMAILS_ENABLED and user_in.email:
         send_new_account_email(
-            email_to=user_in.email, username=user_in.email, password=user_in.password
+            email_to=user_in.email, full_name=user_in.email, password=user_in.password
         )
     return user
 
@@ -58,25 +58,24 @@ def create_user(
 def update_user_me(
     *,
     db: Session = Depends(get_db),
-    password: str = Body(None),
-    full_name: str = Body(None),
-    email: EmailStr = Body(None),
+    user_in: OpenUserUpdate,
     current_user: DBUser = Depends(get_current_active_user),
 ):
     """
     Update own user.
     """
-    current_user_data = jsonable_encoder(current_user)
-    user_in = UserUpdate(**current_user_data)
-    if password is not None:
-        user_in.password = password
-    if full_name is not None:
-        user_in.full_name = full_name
-    if email is not None:
-        user_in.email = email
-    user = crud.user.update(db, db_obj=current_user, obj_in=user_in)
-    return user
 
+    current_user_data = jsonable_encoder(current_user)
+    update_user_in = UserUpdate(**current_user_data)
+    if user_in.password is not None:
+        update_user_in.password = user_in.password
+    if user_in.email is not None:
+        update_user_in.email = user_in.email
+    if user_in.full_name is not None:
+        update_user_in.full_name = user_in.full_name
+
+    user = crud.user.update(db, user=current_user, user_in=update_user_in)
+    return user
 
 @router.get("/me", response_model=User)
 def read_user_me(
@@ -93,26 +92,33 @@ def read_user_me(
 def create_user_open(
     *,
     db: Session = Depends(get_db),
-    password: str = Body(...),
-    email: EmailStr = Body(...),
-    full_name: str = Body(None),
+    open_user_create: OpenUserCreate,
 ):
     """
     Create new user without the need to be logged in.
     """
-    if not config.USERS_OPEN_REGISTRATION:
-        raise HTTPException(
-            status_code=403,
-            detail="Open user registration is forbidden on this server",
-        )
-    user = crud.user.get_by_email(db, email=email)
+
+    user = crud.user.get_by_email(db, email=open_user_create.email)
     if user:
         raise HTTPException(
-            status_code=400,
-            detail="The user with this username already exists in the system",
+            status_code=403,
+            detail="A user with this email already exists in the system",
         )
-    user_in = UserCreate(password=password, email=email, full_name=full_name)
+    user = crud.user.get_by_email(db, email=open_user_create.full_name)
+    if user:
+        raise HTTPException(
+            status_code=403,
+            detail="A user with this full_name already exists in the system",
+        )
+    user_in = UserCreate(password=open_user_create.password,
+                         email=open_user_create.email,
+                         full_name=open_user_create.full_name)
     user = crud.user.create(db, obj_in=user_in)
+
+    if config.EMAILS_ENABLED and user_in.email:
+        send_new_account_email(
+            email_to=user_in.email, username=user_in.email, password=user_in.password
+        )
     return user
 
 
@@ -150,7 +156,14 @@ def update_user(
     if not user:
         raise HTTPException(
             status_code=404,
-            detail="The user with this username does not exist in the system",
+            detail="The user with this full_name does not exist in the system",
         )
+
+    if not current_user.is_superuser and user_in.is_superuser:
+        raise HTTPException(
+            status_code=403,
+            detail="Regular users may not upgrade themselves to become superuser",
+        )
+
     user = crud.user.update(db, db_obj=user, obj_in=user_in)
     return user
