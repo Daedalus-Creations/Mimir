@@ -85,7 +85,7 @@
           dark
           small
           :key="quoteType"
-          :color="typeColor(quoteType)+' darken-1'"
+          :color="typeColor(quoteType)+' darken-2'"
           @click="createQuote(quoteType)"
         >
           <v-icon small>fas fa-{{typeIconName(quoteType)}}</v-icon>
@@ -102,7 +102,7 @@ import Card from "@/components/Card.vue";
 import NewQuote from "@/components/NewQuote.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { readQuotes, readNewQuoteOpen, readNewQuote } from "@/store/main/getters.ts";
-import { dispatchLoadQuotes } from "@/store/main/actions";
+import { dispatchLoadQuotes, dispatchLoadTags } from "@/store/main/actions";
 import { commitSetNewQuoteOpen, commitSetNewQuote, commitClearNewQuote } from "@/store/main/mutations"
 import { typeIcon, type, typeColor, IQuoteCreate } from "@/interfaces";
 
@@ -150,6 +150,7 @@ export default class Cards extends Vue {
 
   created() {
     dispatchLoadQuotes(this.$store); // read quotes from server on creation
+    dispatchLoadTags(this.$store); // read tags from server
   }
 }
 </script>

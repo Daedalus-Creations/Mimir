@@ -1,4 +1,4 @@
-import {IUserProfile, IQuote, IQuoteCreate} from '@/interfaces';
+import {IUserProfile, IQuote, IQuoteCreate, ITag} from '@/interfaces';
 
 export interface AppNotification {
     content: string;
@@ -17,4 +17,5 @@ export interface MainState {
     quotes: IQuote[];
     newQuote: IQuoteCreate;
     newQuoteOpen: boolean;
+    tags: ITag[];
 }

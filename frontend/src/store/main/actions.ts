@@ -13,9 +13,10 @@ import {
   commitSetToken,
   commitSetUserProfile,
   commitSetQuotes,
+  commitSetTags,
 } from './mutations';
 import {AppNotification, MainState} from './state';
-import {IQuote, IQuoteCreate, IQuoteUpdate} from '@/interfaces';
+import {IQuote, IQuoteCreate, IQuoteUpdate, ITagUpdate, ITag} from '@/interfaces';
 
 type MainContext = ActionContext<MainState, State>;
 
@@ -166,9 +167,20 @@ export const actions = {
       throw error; // error handling
     }
   },
+  async loadTags(context: MainContext) {
+    try {
+      const response = await api.getTags(context.state.token);
+      if(response.data) {
+        commitSetTags(context, response.data);
+      }
+    }
+    catch(error){
+      throw error;
+    }
+  },
   async updateQuote(context: MainContext, payload: IQuote) {
     try {
-      const quote = Object.assign({}, payload); // copy quote
+      let quote = JSON.parse(JSON.stringify(payload)) // clone payload
       delete quote.id; // remove id property
       delete quote.owner_id; // remove owner id property
       const quoteUpdate : IQuoteUpdate = quote; // verify with interface
@@ -192,6 +204,18 @@ export const actions = {
       throw error; // error handling
     }
   },
+  async updateTag(context: MainContext, payload: ITag) {
+    try {
+      let tag = JSON.parse(JSON.stringify(payload)) // clone payload
+      delete tag.id; // remove id property
+      delete tag.owner_id; // remove owner id property
+      const tagUpdate : ITagUpdate = tag; // verify with interface
+
+      await api.updateTag(context.state.token, payload.id, tagUpdate);
+    } catch (error) {
+      throw error; // error handling
+    }
+  },
 
 };
 
@@ -211,6 +235,8 @@ export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
 export const dispatchLoadQuotes = dispatch(actions.loadQuotes);
+export const dispatchLoadTags = dispatch(actions.loadTags);
 export const dispatchUpdateQuote = dispatch(actions.updateQuote);
 export const dispatchCreateQuote = dispatch(actions.createQuote);
 export const dispatchDeleteQuote = dispatch(actions.deleteQuote);
+export const dispatchUpdateTag = dispatch(actions.updateTag);

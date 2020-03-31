@@ -50,7 +50,7 @@
           </v-row>
           <v-row>
             <v-col class="py-0">
-              <v-textarea label="Tags" filled rounded dense rows="1" :auto-grow="true" />
+              <v-autocomplete label="Tags" filled rounded dense append-icon="expand_more" />
             </v-col>
           </v-row>
         </v-container>
@@ -99,14 +99,14 @@ export default class NewQuote extends Vue {
     commitSetNewQuoteOpen(this.$store, payload);
   }
 
-  get type(): type {
+  get type() {
     return type; // get type enum/object
   }
-  get color(): string {
-    if(this.quote.color === null) // if no color set
-      return this.typeColor(this.quote.type); // set color based on type
-    else
-      return this.quote.color; // use custom color if set
+  get color(): string | undefined{
+    if(this.quote.color) // if color is set
+      return this.quote.color  // return color
+    else // if color is null
+      return typeColor.get(this.quote.type); // set color based on type
   }
   typeColor(type: type): string | undefined {
     return typeColor.get(type); // get color name based on type

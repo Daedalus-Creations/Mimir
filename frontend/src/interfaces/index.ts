@@ -71,7 +71,7 @@ text: string;
 description?: string;
 public?: boolean;
 color?: string | null;
-tags?: Array<ITag>;
+tags?: ITag[];
 id: number;
 owner_id: number;
 }
@@ -84,7 +84,7 @@ text?: string;
 description?: string;
 public?: boolean;
 color?: string | null;
-tags?: Array<ITag>;
+tags?: ITag[];
 }
 
 export interface IQuoteCreate {
@@ -95,7 +95,7 @@ text: string;
 description?: string;
 public?: boolean;
 color?: string | null;
-tags?: Array<ITag>;
+tags?: ITag[];
 }
 
 export interface ITag {

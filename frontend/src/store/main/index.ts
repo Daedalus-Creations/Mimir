@@ -15,6 +15,7 @@ const defaultState: MainState = {
   quotes: [],
   newQuote: Object.assign({}, defaultQuote),
   newQuoteOpen: false,
+  tags: [],
 };
 
 export const mainModule = {

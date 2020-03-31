@@ -17,14 +17,16 @@
       
     <v-menu offset-y v-if="editable" :close-on-content-click="false">
 		<template v-slot:activator="{ on }">
-			<v-btn small  text class="mr-2" v-on="on">Custom Color</v-btn>
+            <v-btn v-if="quote.color" small text class="mr-2" @click="quote.color=null">Reset Color</v-btn>
+			<v-btn v-else small text class="mr-2" @click="quote.color='#000000'" v-on="on">Set Custom Color</v-btn>           
 		</template>
 		<v-card>
 			<v-card-text class="pa-0">
-				<v-color-picker v-model="quote.color" class="no-alpha" flat hide-mode-switch />
+				<v-color-picker v-model="quote.color" flat hide-mode-switch />
 			</v-card-text>
 		</v-card>
 	</v-menu>
+    
 
       <v-btn v-if="editable" color="error" small class="mr-3" @click.stop="confirmDelete=true">Delete</v-btn>
       <v-btn v-if="editable" color="success" small @click="updateQuote">Save</v-btn>
@@ -47,7 +49,19 @@
         
     </v-card-text>
     <v-card-text class="py-0 px-8"> 
-        <v-chip-group class="white--text" column><v-chip small color="blue darken-1">tag</v-chip><v-chip small color="red darken-1">tag</v-chip><v-chip small color="amber darken-1">tag</v-chip></v-chip-group>
+        <v-chip-group v-if="quote.tags.length > 0 && !editable" class="white--text" column>
+            <v-chip small v-for="tag in quote.tags" :key="tag.id" :color="tag.color+' darken-1'">{{tag.title}}</v-chip>
+        </v-chip-group>
+
+        <v-autocomplete small multiple v-if="editable" v-model="quoteTags" :items="userTags" item-text="title" item-value="id" label="Tags" append-icon="expand_more">
+            <template v-slot:append>
+                <v-btn icon><v-icon>add</v-icon></v-btn>
+            </template>
+            <template v-slot:selection="data">
+                <Tag :id="data.item.id"></Tag>
+              </template>
+        </v-autocomplete>
+
     </v-card-text>
     <v-card-actions class="py-0">
       <v-list-item dense>
@@ -56,7 +70,7 @@
         </v-list-item-avatar>
         <v-list-item-content class="subheading">
           <span v-if="!editable">{{quote.author}}</span>
-          <v-text-field dense class="my-0" v-model="quote.author" placeholder="Author" v-else />
+          <v-text-field dense class="my-0" v-model="quote.author"  placeholder="Author" v-else />
         </v-list-item-content>
       </v-list-item>
 
@@ -105,31 +119,39 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { readQuotes } from "@/store/main/getters.ts";
+import { readQuotes, readTags } from "@/store/main/getters.ts";
 import { commitAddNotification, commitSetQuote } from "@/store/main/mutations";
-import { IQuote, type, typeIcon, typeColor } from "@/interfaces";
+import { IQuote, ITag, type, typeIcon, typeColor } from "@/interfaces";
 import { dispatchDeleteQuote, dispatchLoadQuotes, dispatchUpdateQuote } from "@/store/main/actions";
+import Swatches from 'vue-swatches';
+import Tag from '@/components/Tag.vue'
 const tinycolor = require("tinycolor2");
 
 @Component({
   components: {
+      Swatches,
+      Tag
   }
 })
 export default class Card extends Vue {
   public editable = false;
   public isLoading = false;
   public confirmDelete = false;
+  public quoteTags: number[] = []; // keep list of tag ids associated with quote
 
   @Prop({ required: true }) id!: number;
 
   get quote(): IQuote {
     // find quote with specified id number
-    return readQuotes(this.$store).find(quote => quote.id === this.id);
+    return readQuotes(this.$store).find(quote => quote.id === this.id)!;
   }
-  set quote(newquote: IQuote) {
+  set quote(newquote) {
     if (newquote) {
       commitSetQuote(this.$store, newquote);
     }
+  }
+  get userTags() : ITag[] {
+      return readTags(this.$store);
   }
   typeIconName(type): string | undefined {
     return typeIcon.get(type); // get icon name based on type enum
@@ -137,11 +159,11 @@ export default class Card extends Vue {
   get type() {
     return type; // get type enum/object
   }
-  get color(): string {
-    if(this.quote.color === null) // if no color set
+  get color(): string | undefined {
+    if(this.quote.color) // if color is set
+      return this.quote.color  // return color
+    else // if color is null
       return typeColor.get(this.quote.type); // set color based on type
-    else
-      return this.quote.color; // use custom color if set
   }
   togglePublic(): void {
     this.quote.public = !this.quote.public; // toggle public setting
@@ -161,6 +183,7 @@ export default class Card extends Vue {
   async updateQuote() {
     try {
       this.isLoading = true; // set loading flag
+      this.quote.tags = this.userTags.filter(tag => this.quoteTags.includes(tag.id)); // update list of tags
       if (this.quote) {
         await dispatchUpdateQuote(this.$store, this.quote);
       } // send request to server
@@ -206,6 +229,11 @@ export default class Card extends Vue {
       this.isLoading = false; // reset loading flag
     }
   }
+
+  created() {
+      if(this.quote.tags)
+        this.quoteTags = this.quote.tags.map(tag => tag.id); // initialize list of tag ids
+  }
 }
 </script>
 
@@ -224,11 +252,5 @@ export default class Card extends Vue {
 /deep/ .v-text-field__details {
   min-height: 0px;
   height: 0px;
-}
-/deep/ .no-alpha .v-color-picker__controls .v-color-picker__preview .v-color-picker__sliders .v-color-picker__alpha {
-        display: none;
-}
-/deep/ .no-alpha .v-color-picker__controls .v-color-picker__edit .v-color-picker__input:last-child {
-        display: none;
 }
 </style>

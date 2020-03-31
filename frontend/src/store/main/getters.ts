@@ -18,6 +18,7 @@ export const getters = {
   quotes: (state: MainState) => state.quotes,
   newQuote: (state: MainState) => state.newQuote,
   newQuoteOpen: (state: MainState) => state.newQuoteOpen,
+  tags: (state: MainState) => state.tags,
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -33,3 +34,4 @@ export const readFirstNotification = read(getters.firstNotification);
 export const readQuotes = read(getters.quotes);
 export const readNewQuote = read(getters.newQuote);
 export const readNewQuoteOpen = read(getters.newQuoteOpen);
+export const readTags = read(getters.tags);
