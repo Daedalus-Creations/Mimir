@@ -46,5 +46,23 @@ class CRUDTag(CRUDBase[Tag, TagCreate, TagUpdate]):
                 .all()
         )
 
+    def update(
+        self, db_session: Session, *, db_obj: Tag, obj_in: TagUpdate
+    ) -> Tag:
+        obj_data = jsonable_encoder(db_obj)
+        update_data = obj_in.dict(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                if field == "color":
+                    setattr(db_obj, field, update_data[field].as_hex())
+                else:
+                    setattr(db_obj, field, update_data[field])
+
+
+        db_session.add(db_obj)
+        db_session.commit()
+        db_session.refresh(db_obj)
+        return db_obj
+
 
 tag = CRUDTag(Tag)
