@@ -139,13 +139,21 @@
       <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
         <span class="hidden-sm-and-down">{{appName}}</span>
       </v-toolbar-title>
-      <v-text-field
+      <v-autocomplete
         flat
         solo-inverted
+        :items="items"
+        :loading="isLoading"
+        :search-input.sync="search"
         hide-details
+        hide-no-data
         prepend-inner-icon="search"
+        append-icon=""
         label="Search quotes"
         class="hidden-sm-and-down"
+        hide-selected
+        item-text="Description"
+        item-value="API"
       />
       <v-spacer />
       <v-btn @click="logout">Log Out</v-btn>
@@ -163,10 +171,10 @@
             <v-btn text v-on="on">Sort</v-btn>
           </template>
           <v-list>
-            <v-list-item link><v-list-item-title>By Author</v-list-item-title></v-list-item>
-            <v-list-item link><v-list-item-title>By Title</v-list-item-title></v-list-item>
-            <v-list-item link><v-list-item-title>By Type</v-list-item-title></v-list-item>
-            <v-list-item link><v-list-item-title>By Tag</v-list-item-title></v-list-item>
+            <v-list-item @click="sortBy('author')"><v-list-item-title>By Author</v-list-item-title></v-list-item>
+            <v-list-item @click="sortBy('title')"><v-list-item-title>By Title</v-list-item-title></v-list-item>
+            <v-list-item @click="sortBy('type')"><v-list-item-title>By Type</v-list-item-title></v-list-item>
+            <v-list-item @click="sortBy('color')"><v-list-item-title>By Color</v-list-item-title></v-list-item>
           </v-list>
         </v-menu>
         <v-btn icon>
@@ -188,13 +196,16 @@ import { appName } from "@/env";
 import {
   readDashboardMiniDrawer,
   readDashboardShowDrawer,
-  readHasAdminAccess
+  readHasAdminAccess,
+  readQuotes
 } from "@/store/main/getters";
 import {
   commitSetDashboardShowDrawer,
-  commitSetDashboardMiniDrawer
+  commitSetDashboardMiniDrawer,
+  commitSetQuotes,
 } from "@/store/main/mutations";
 import { dispatchUserLogOut } from "@/store/main/actions";
+import {IQuote} from "@/interfaces/index.ts"
 
 const routeGuardMain = async (to, from, next) => {
   if (to.path === "/main") {
@@ -208,6 +219,16 @@ const routeGuardMain = async (to, from, next) => {
 export default class Main extends Vue {
   public appName = appName;
 
+  get quotes() : IQuote[] {
+    return readQuotes(this.$store); // read quotes to display from store
+  }
+  set quotes(newQuotes : IQuote[]) {
+    commitSetQuotes(this.$store, newQuotes); // read quotes to display from store
+  }
+
+  public sortBy(attr : string): void{
+    this.quotes = this.quotes.sort((a,b) => a[attr].localeCompare(b[attr])) //sort list of quotes by selected attribute
+  }
   public beforeRouteEnter(to, from, next) {
     routeGuardMain(to, from, next);
   }
